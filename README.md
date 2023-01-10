@@ -1,2 +1,2 @@
-# modelitek
+# Modelitek
 Nobatek Modelica Component
