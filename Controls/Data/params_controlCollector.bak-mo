@@ -1,0 +1,20 @@
+within Modelitek.Controls.Data;
+record params_controlCollector "Generic data record providing inputs for specific collector data records"
+  extends Modelica.Icons.Record;
+  parameter Real TAH_bsol_bas "param TAH_bsol_bas";
+  parameter Real TALL_k7_a "param TALL_k7_a";
+  parameter Real DeltaAct "param DeltaAct";
+  parameter Real TAHH_csol_s "param TAHH_csol_s";
+  parameter Real DeltaDesact "param DeltaDesact";
+  parameter Real TAL_csol_s "param TAL_csol_s";
+  parameter Real timer_init_speed "param timer_init_speed";
+  parameter Real timer_on_off "param timer_on_off";
+  annotation(
+    defaultComponentPrefixes = "parameter",
+    defaultComponentName = "params",
+    Documentation(info = "<html>
+  <p>
+  Tableau de paramètres, pour simplifier l'externalisation des paramètres d'un modèle et faciliter l'optimisation-calibration
+  </p>
+</html>"));
+end params_controlCollector;
