@@ -1,0 +1,24 @@
+within Modelitek.Controls.Examples;
+
+model Test_control3speeds
+  extends Modelica.Icons.Example;
+  Modelitek.Controls.ControlAllSeason_3speeds_test controlAllSeason_3speeds_test annotation(
+    Placement(visible = true, transformation(origin = {30, -18}, extent = {{-26, -15}, {22, 15}}, rotation = 0)));
+  Modelica.Blocks.Sources.Sine T_bas(amplitude = 13, f = 8e-5, offset = 273.15 + 18)  annotation(
+    Placement(visible = true, transformation(origin = {32, -66}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Sine sine(amplitude = 5, f = 1.15e-5, offset = 273.15 + 15) annotation(
+    Placement(visible = true, transformation(origin = {-46, 66}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Sine sine1(amplitude = 5, f = 1.15e-5, offset = 273.15 + 20) annotation(
+    Placement(visible = true, transformation(origin = {-46, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Sine sine2(amplitude = 5, f = 1.15e-5, offset = 273.15 + 25) annotation(
+    Placement(visible = true, transformation(origin = {-46, -4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+equation
+  connect(T_bas.y, controlAllSeason_3speeds_test.T_bas_ballons) annotation(
+    Line(points = {{43, -66}, {51, -66}, {51, -48}, {39, -48}, {39, -29}}, color = {0, 0, 127}));
+  connect(sine.y, controlAllSeason_3speeds_test.Tcsol_e) annotation(
+    Line(points = {{-35, 66}, {-18, 66}, {-18, -8}, {12, -8}}, color = {0, 0, 127}));
+  connect(sine1.y, controlAllSeason_3speeds_test.Tk7_a) annotation(
+    Line(points = {{-35, 32}, {-23, 32}, {-23, -16}, {11, -16}}, color = {0, 0, 127}));
+  connect(sine2.y, controlAllSeason_3speeds_test.Tcsol_s) annotation(
+    Line(points = {{-35, -4}, {-27, -4}, {-27, -22}, {11, -22}}, color = {0, 0, 127}));
+end Test_control3speeds;

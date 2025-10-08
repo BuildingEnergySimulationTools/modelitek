@@ -1,0 +1,116 @@
+within Modelitek.Controls.Hvac;
+
+model HeatpumpControl
+  Modelica.StateGraph.InitialStep initialStep(nIn = 1, nOut = 1) annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, rotation = -90, origin = {-88, -34})));
+  Modelica.StateGraph.TransitionWithSignal toOn(enableTimer = false, waitTime = 5) "Transition to on" annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, origin = {-88, -60}, rotation = 270)));
+  Modelica.StateGraph.StepWithSignal P_active(nIn = 1, nOut = 1) annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, rotation = 270, origin = {-88, -88})));
+  Modelica.StateGraph.TransitionWithSignal toOff(enableTimer = true, waitTime = 2) "Transition to off" annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, origin = {-88, -120}, rotation = 270)));
+  inner Modelica.StateGraph.StateGraphRoot stateGraphRoot annotation(
+    Placement(transformation(extent = {{-22, 90}, {-2, 110}})));
+  Modelica.Blocks.Logical.Switch chaSwi1 "Switch to charge battery" annotation(
+    Placement(transformation(extent = {{-20, 28}, {0, 48}})));
+  Modelica.Blocks.Sources.RealExpression b1(y = 0) annotation(
+    Placement(transformation(extent = {{-54, 46}, {-34, 66}})));
+  Modelica.Blocks.Sources.RealExpression b2(y = 1) annotation(
+    Placement(transformation(extent = {{-54, 10}, {-34, 30}})));
+  Modelica.Blocks.Interfaces.RealOutput M3 annotation(
+    Placement(visible = true, transformation(extent = {{78, 26}, {104, 52}}, rotation = 0), iconTransformation(extent = {{74, 46}, {108, 80}}, rotation = 0)));
+  Modelica.Blocks.MathBoolean.And activate_changement_vitesse_bool(nu = 2) annotation(
+    Placement(transformation(extent = {{-156, -124}, {-142, -110}})));
+  Modelica.Blocks.Logical.Timer timer annotation(
+    Placement(transformation(extent = {{-124, -82}, {-138, -68}})));
+  Modelica.Blocks.Interfaces.BooleanInput demande_ECS annotation(
+    Placement(visible = true, transformation(origin = {-262, 68}, extent = {{-16, -16}, {16, 16}}, rotation = 0), iconTransformation(extent = {{-262, 36}, {-228, 70}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.BooleanInput demande_BT annotation(
+    Placement(visible = true, transformation(extent = {{-282, -74}, {-248, -40}}, rotation = 0), iconTransformation(extent = {{-262, -80}, {-228, -46}}, rotation = 0)));
+  Modelica.Blocks.Logical.GreaterEqualThreshold greaterEqualThreshold(threshold = 5 * 60) annotation(
+    Placement(transformation(extent = {{-152, -82}, {-166, -68}})));
+  Modelica.Blocks.Logical.Or or1 annotation(
+    Placement(transformation(extent = {{-228, -76}, {-208, -56}})));
+  Modelica.Blocks.Logical.Not not2 annotation(
+    Placement(transformation(extent = {{-196, -112}, {-184, -124}})));
+  Modelica.StateGraph.InitialStep initialStep1(nIn = 1, nOut = 1) annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, rotation = -90, origin = {-88, 94})));
+  Modelica.StateGraph.TransitionWithSignal toOn1(enableTimer = false, waitTime = 5) "Transition to on" annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, origin = {-88, 68}, rotation = 270)));
+  Modelica.StateGraph.StepWithSignal P_active1(nIn = 1, nOut = 1) annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, rotation = 270, origin = {-88, 40})));
+  Modelica.StateGraph.TransitionWithSignal toOff1(enableTimer = true, waitTime = 2) "Transition to off" annotation(
+    Placement(transformation(extent = {{-10, -10}, {10, 10}}, origin = {-88, 8}, rotation = 270)));
+  Modelica.Blocks.Logical.Not not3 annotation(
+    Placement(transformation(extent = {{-206, 6}, {-194, -6}})));
+  Modelica.Blocks.Interfaces.BooleanOutput Demande_PAC annotation(
+    Placement(visible = true, transformation(extent = {{74, -116}, {106, -84}}, rotation = 0), iconTransformation(extent = {{74, -94}, {110, -58}}, rotation = 0)));
+  Modelica.Blocks.MathBoolean.And activate_changement_vitesse_bool1(nu = 2) annotation(
+    Placement(visible = true, transformation(extent = {{-158, 2}, {-144, 16}}, rotation = 0)));
+  Modelica.Blocks.Logical.Timer timer1 annotation(
+    Placement(transformation(extent = {{-110, 34}, {-124, 48}})));
+  Modelica.Blocks.Logical.GreaterEqualThreshold greaterEqualThreshold1(threshold = 5 * 60) annotation(
+    Placement(transformation(extent = {{-138, 34}, {-152, 48}})));
+equation
+  connect(initialStep.outPort[1], toOn.inPort) annotation(
+    Line(points = {{-88, -44.5}, {-88, -56}}, color = {0, 0, 0}));
+  connect(toOn.outPort, P_active.inPort[1]) annotation(
+    Line(points = {{-88, -61.5}, {-88, -77}}, color = {0, 0, 0}));
+  connect(P_active.outPort[1], toOff.inPort) annotation(
+    Line(points = {{-88, -98.5}, {-88, -116}}, color = {0, 0, 0}));
+  connect(toOff.outPort, initialStep.inPort[1]) annotation(
+    Line(points = {{-88, -121.5}, {-88, -128}, {-66, -128}, {-66, -18}, {-88, -18}, {-88, -23}}, color = {0, 0, 0}));
+  connect(b1.y, chaSwi1.u1) annotation(
+    Line(points = {{-33, 56}, {-30, 56}, {-30, 46}, {-22, 46}}, color = {0, 0, 127}));
+  connect(b2.y, chaSwi1.u3) annotation(
+    Line(points = {{-33, 20}, {-30, 20}, {-30, 30}, {-22, 30}}, color = {0, 0, 127}));
+  connect(chaSwi1.y, M3) annotation(
+    Line(points = {{1, 38}, {1, 39}, {91, 39}}, color = {0, 0, 127}));
+  connect(P_active.active, timer.u) annotation(
+    Line(points = {{-99, -88}, {-114, -88}, {-114, -75}, {-122.6, -75}}, color = {255, 0, 255}));
+  connect(timer.y, greaterEqualThreshold.u) annotation(
+    Line(points = {{-138.7, -75}, {-150.6, -75}}, color = {0, 0, 127}));
+  connect(demande_ECS, or1.u1) annotation(
+    Line(points = {{-262, 68}, {-232, 68}, {-232, -66}, {-230, -66}}, color = {255, 0, 255}));
+  connect(demande_BT, or1.u2) annotation(
+    Line(points = {{-265, -57}, {-238, -57}, {-238, -74}, {-230, -74}}, color = {255, 0, 255}));
+  connect(or1.y, toOn.condition) annotation(
+    Line(points = {{-207, -66}, {-172, -66}, {-172, -60}, {-100, -60}}, color = {255, 0, 255}));
+  connect(or1.y, not2.u) annotation(
+    Line(points = {{-207, -66}, {-202, -66}, {-202, -118}, {-197.2, -118}}, color = {255, 0, 255}));
+  connect(activate_changement_vitesse_bool.y, toOff.condition) annotation(
+    Line(points = {{-140.95, -117}, {-102, -117}, {-102, -120}, {-100, -120}}, color = {255, 0, 255}));
+  connect(initialStep1.outPort[1], toOn1.inPort) annotation(
+    Line(points = {{-88, 83.5}, {-88, 72}}, color = {0, 0, 0}));
+  connect(toOn1.outPort, P_active1.inPort[1]) annotation(
+    Line(points = {{-88, 66.5}, {-88, 51}}, color = {0, 0, 0}));
+  connect(P_active1.outPort[1], toOff1.inPort) annotation(
+    Line(points = {{-88, 29.5}, {-88, 12}}, color = {0, 0, 0}));
+  connect(toOff1.outPort, initialStep1.inPort[1]) annotation(
+    Line(points = {{-88, 6.5}, {-88, -4}, {-66, -4}, {-66, 110}, {-88, 110}, {-88, 105}}, color = {0, 0, 0}));
+  connect(P_active1.active, chaSwi1.u2) annotation(
+    Line(points = {{-99, 40}, {-100, 40}, {-100, 56}, {-60, 56}, {-60, 38}, {-22, 38}}, color = {255, 0, 255}));
+  connect(not3.u, demande_ECS) annotation(
+    Line(points = {{-207.2, 0}, {-232, 0}, {-232, 68}, {-262, 68}}, color = {255, 0, 255}));
+  connect(toOn1.condition, demande_ECS) annotation(
+    Line(points = {{-100, 68}, {-262, 68}}, color = {255, 0, 255}));
+  connect(P_active.active, Demande_PAC) annotation(
+    Line(points = {{-99, -88}, {-100, -88}, {-100, -100}, {90, -100}}, color = {255, 0, 255}));
+  connect(P_active1.active, timer1.u) annotation(
+    Line(points = {{-99, 40}, {-99, 41}, {-108.6, 41}}, color = {255, 0, 255}));
+  connect(timer1.y, greaterEqualThreshold1.u) annotation(
+    Line(points = {{-124.7, 41}, {-136.6, 41}}, color = {0, 0, 127}));
+  connect(activate_changement_vitesse_bool1.y, toOff1.condition) annotation(
+    Line(points = {{-143, 9}, {-130.475, 9}, {-130.475, 8}, {-100, 8}}, color = {255, 0, 255}));
+  connect(greaterEqualThreshold1.y, activate_changement_vitesse_bool1.u[1]) annotation(
+    Line(points = {{-152, 42}, {-182, 42}, {-182, 10}, {-158, 10}}, color = {255, 0, 255}));
+  connect(greaterEqualThreshold.y, activate_changement_vitesse_bool.u[1]) annotation(
+    Line(points = {{-166, -74}, {-172, -74}, {-172, -116}, {-156, -116}}, color = {255, 0, 255}));
+  connect(not2.y, activate_changement_vitesse_bool.u[2]) annotation(
+    Line(points = {{-184, -118}, {-170, -118}, {-170, -116}, {-156, -116}}, color = {255, 0, 255}));
+  connect(not3.y, activate_changement_vitesse_bool1.u[2]) annotation(
+    Line(points = {{-194, 0}, {-174, 0}, {-174, 10}, {-158, 10}}, color = {255, 0, 255}));
+  annotation(
+    Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-260, -140}, {80, 120}}), graphics = {Text(lineColor = {0, 0, 255}, extent = {{-240, -198}, {60, -158}}, textString = "%name"), Rectangle(origin = {-90, -11}, fillColor = {170, 170, 255}, fillPattern = FillPattern.Solid, extent = {{-170, 129}, {170, -129}}), Text(origin = {-79, -8}, extent = {{-95, 78}, {95, -78}}, textString = "Control_PAC")}),
+    Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-260, -140}, {80, 120}})));
+end HeatpumpControl;

@@ -1,0 +1,21 @@
+within Modelitek.Controls.Examples;
+
+model test
+  ControlAllSeason_3speeds controlAllSeason_3speeds annotation(
+    Placement(visible = true, transformation(origin = {2, 2}, extent = {{-26, -15}, {22, 15}}, rotation = 0)));
+  Modelica.Blocks.Sources.RealExpression realExpression1(y = 1) annotation(
+    Placement(visible = true, transformation(origin = {-83, 14}, extent = {{-25, -8}, {25, 8}}, rotation = 0)));
+equation
+  connect(realExpression1.y, controlAllSeason_3speeds.Tcsol_e) annotation(
+    Line(points = {{-56, 14}, {-36, 14}, {-36, 12}, {-16, 12}}, color = {0, 0, 127}));
+  connect(realExpression1.y, controlAllSeason_3speeds.Tk7_a) annotation(
+    Line(points = {{-56, 14}, {-44, 14}, {-44, 4}, {-16, 4}}, color = {0, 0, 127}));
+  connect(realExpression1.y, controlAllSeason_3speeds.Tcsol_s) annotation(
+    Line(points = {{-56, 14}, {-54, 14}, {-54, -2}, {-16, -2}}, color = {0, 0, 127}));
+  connect(realExpression1.y, controlAllSeason_3speeds.t_period) annotation(
+    Line(points = {{-56, 14}, {-40, 14}, {-40, -26}, {-10, -26}, {-10, -10}}, color = {0, 0, 127}));
+  connect(realExpression1.y, controlAllSeason_3speeds.T_haut_ballons) annotation(
+    Line(points = {{-56, 14}, {-46, 14}, {-46, -40}, {6, -40}, {6, -10}}, color = {0, 0, 127}));
+  connect(realExpression1.y, controlAllSeason_3speeds.T_bas_ballons) annotation(
+    Line(points = {{-56, 14}, {-58, 14}, {-58, -30}, {12, -30}, {12, -10}}, color = {0, 0, 127}));
+end test;

@@ -1,0 +1,83 @@
+within Modelitek.Sensors;
+
+model TemperatureFlow2
+
+    replaceable package Medium =
+    Modelica.Media.Interfaces.PartialMedium "Medium in the component"
+      annotation (choices(
+        choice(redeclare package Medium = Buildings.Media.Air "Moist air"),
+        choice(redeclare package Medium = Buildings.Media.Water "Water"),
+        choice(redeclare package Medium =
+            Buildings.Media.Antifreeze.PropyleneGlycolWater (
+              property_T=220,
+              X_a=0.40)
+              "Propylene glycol water, 40% mass fraction")));
+
+  Modelica.Fluid.Interfaces.FluidPort_a port_a(redeclare final package
+      Medium = Medium)
+    "Fluid connector a (positive design flow direction is from port_a to port_b)"
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}),
+        iconTransformation(extent={{-110,-10},{-90,10}})));
+  Modelica.Fluid.Interfaces.FluidPort_b port_b(
+    redeclare final package Medium = Medium)
+    "Fluid connector b (positive design flow direction is from port_a to port_b)"
+    annotation (Placement(transformation(extent={{110,-10},{90,10}}),
+        iconTransformation(extent={{110,-10},{90,10}})));
+  Buildings.Fluid.Sensors.TemperatureTwoPort T_mes(
+    redeclare package Medium = Medium,
+    m_flow_nominal=1,
+    T_start=293.15) "Outlet temperature of the heater"
+    annotation (Placement(transformation(extent={{-68,-12},{-46,14}})));
+  Buildings.Fluid.Sensors.MassFlowRate senMasFlo2(redeclare package
+      Medium = Medium)
+    annotation (Placement(transformation(extent={{20,-10},{44,14}})));
+  Modelica.Blocks.Interfaces.RealOutput T "K" annotation (Placement(
+        transformation(
+        extent={{-12,-12},{12,12}},
+        rotation=90,
+        origin={-80,106}), iconTransformation(
+        extent={{-14,-14},{14,14}},
+        rotation=90,
+        origin={-62,102})));
+  Modelica.Blocks.Interfaces.RealOutput D "K" annotation (Placement(
+        transformation(
+        extent={{-12,-12},{12,12}},
+        rotation=90,
+        origin={62,106}), iconTransformation(
+        extent={{-14,-14},{14,14}},
+        rotation=90,
+        origin={64,102})));
+equation
+  connect(T_mes.T, T) annotation (Line(points={{-57,15.3},{-57,88},{-80,
+          88},{-80,106}},
+                 color={0,0,127}));
+  connect(senMasFlo2.m_flow, D) annotation (Line(points={{32,15.2},{32,
+          88},{62,88},{62,106}},
+                               color={0,0,127}));
+  connect(port_a, T_mes.port_a) annotation (Line(points={{-100,0},{-74,0},{-74,1},
+          {-68,1}},        color={0,127,255}));
+  connect(T_mes.port_b, senMasFlo2.port_a) annotation (Line(points={{-46,1},
+          {-13,1},{-13,2},{20,2}},
+                                color={0,127,255}));
+  connect(senMasFlo2.port_b, port_b) annotation (Line(points={{44,2},{
+          86,2},{86,0},{100,0}}, color={0,127,255}));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+        Text(
+          extent={{-152,-150},{148,-110}},
+          lineColor={0,0,255},
+          textString="%name"),
+        Rectangle(
+          extent={{-92,92},{94,-96}},
+          lineColor={0,0,0},
+          pattern=LinePattern.Dash,
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={0,140,72}),
+        Text(
+          extent={{-60,62},{58,-66}},
+          lineColor={0,0,0},
+          pattern=LinePattern.Dash,
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={0,0,0},
+          textString="C")}),
+        Diagram(coordinateSystem(preserveAspectRatio=false)));
+end TemperatureFlow2;
