@@ -1,4 +1,4 @@
-within Modelitek.Hvac.DomesticHotWater; #commentaire
+within Modelitek.Hvac.DomesticHotWater; 
 package Exemples
   extends Modelica.Icons.Package;
 
