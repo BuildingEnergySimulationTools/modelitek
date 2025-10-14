@@ -21,7 +21,7 @@ model EnergyMeterExample
     Placement(transformation(origin = {134, 4}, extent = {{10, -10}, {-10, 10}})));
   Modelica.Blocks.Sources.RealExpression WinterMode1(y = 1) "1 for winter" annotation(
     Placement(transformation(origin = {-5, 105}, extent = {{-82, -74}, {-62, -54}})));
-  ExtractEnergy extractEnergy(redeclare package Medium = Buildings.Media.Antifreeze.PropyleneGlycolWater(X_a = 0.40, property_T = 220) "Propylene glycol water, 40% mass fraction")  annotation(
+  Modelitek.Sensors.InjectEnergy InjectEnergy(redeclare package Medium = Buildings.Media.Antifreeze.PropyleneGlycolWater(X_a = 0.40, property_T = 220) "Propylene glycol water, 40% mass fraction")  annotation(
     Placement(transformation(origin = {-40, 62}, extent = {{-15, -10}, {15, 10}})));
 equation
   connect(flow1.y, boundary1.m_flow_in) annotation(
@@ -36,14 +36,16 @@ equation
     Line(points = {{10, 62}, {17, 62}, {17, 54}, {33, 54}}, color = {0, 127, 255}));
   connect(energyMeter.port_a2, boundary1.ports[1]) annotation(
     Line(points = {{42, 40}, {62, 40}, {62, 24}, {78, 24}}, color = {0, 127, 255}));
-  connect(sine.y, extractEnergy.P_demand) annotation(
+  connect(sine.y, InjectEnergy.P_injected) annotation(
     Line(points = {{-69, 92}, {-57, 92}, {-57, 68}, {-47, 68}}, color = {0, 0, 127}));
-  connect(Q_flow.y, extractEnergy.Q_flow) annotation(
+  connect(Q_flow.y, InjectEnergy.Q_flow) annotation(
     Line(points = {{-67, 61}, {-46, 61}, {-46, 64}}, color = {0, 0, 127}));
-  connect(WinterMode1.y, extractEnergy.seasonMode) annotation(
+  connect(WinterMode1.y, InjectEnergy.seasonMode) annotation(
     Line(points = {{-66, 41}, {-54, 41}, {-54, 57}, {-46, 57}}, color = {0, 0, 127}));
-  connect(extractEnergy.port_b, temperatureFlow.port_a) annotation(
+  connect(InjectEnergy.port_b, temperatureFlow.port_a) annotation(
     Line(points = {{-34, 61}, {-10, 61}, {-10, 62}}, color = {0, 127, 255}));
+  connect(sine.y, InjectEnergy.P_injected) annotation(
+    Line(points = {{-68, 92}, {-58, 92}, {-58, 70}, {-46, 70}}, color = {0, 0, 127}));
   annotation(
     Diagram(coordinateSystem(extent = {{-100, 120}, {160, -20}})),
     Icon(graphics = {Ellipse(lineColor = {75, 138, 73}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Polygon(lineColor = {0, 0, 255}, fillColor = {75, 138, 73}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, points = {{-36, 60}, {64, 0}, {-36, -60}, {-36, 60}})}),
@@ -51,10 +53,10 @@ equation
   Documentation(info = "<html><head></head><body><strong data-start=\"1649\" data-end=\"1676\">Purpose of the example:</strong><br><div>
 <ul data-start=\"1680\" data-end=\"2146\">
 <li data-start=\"1680\" data-end=\"1810\">
-<p data-start=\"1682\" data-end=\"1810\">Illustrates how <strong data-start=\"1698\" data-end=\"1733\">heat extraction (<code data-start=\"1716\" data-end=\"1730\">ExtractEnergy</code>)</strong> and <strong data-start=\"1738\" data-end=\"1773\">energy metering (<code data-start=\"1757\" data-end=\"1770\">EnergyMeter</code>)</strong> can be combined into a small loop.</p>
+<p data-start=\"1682\" data-end=\"1810\">Illustrates how <strong data-start=\"1698\" data-end=\"1733\">heat extraction (<code data-start=\"1716\" data-end=\"1730\">InjectEnergy</code>)</strong> and <strong data-start=\"1738\" data-end=\"1773\">energy metering (<code data-start=\"1757\" data-end=\"1770\">EnergyMeter</code>)</strong> can be combined into a small loop.</p>
 </li>
 <li data-start=\"1811\" data-end=\"1951\">
-<p data-start=\"1813\" data-end=\"1951\">Provides a minimal testbed to validate the behavior of&nbsp;<strong data-start=\"1698\" data-end=\"1733\"><code data-start=\"1716\" data-end=\"1730\">ExtractEnergy&nbsp;</code></strong>safety logic (minimum power threshold, season mode, minimum flow protection) and the correct operation of <code data-start=\"2130\" data-end=\"2143\">EnergyMeter</code>.</p></li>
+<p data-start=\"1813\" data-end=\"1951\">Provides a minimal testbed to validate the behavior of&nbsp;<strong data-start=\"1698\" data-end=\"1733\"><code data-start=\"1716\" data-end=\"1730\">InjectEnergy&nbsp;</code></strong>safety logic (minimum power threshold, season mode, minimum flow protection) and the correct operation of <code data-start=\"2130\" data-end=\"2143\">EnergyMeter</code>.</p></li>
 </ul>
 <p data-start=\"2148\" data-end=\"2197\"><strong data-start=\"2148\" data-end=\"2161\">Use case:</strong><br data-start=\"2161\" data-end=\"2164\">
 This type of setup is useful for:</p>
