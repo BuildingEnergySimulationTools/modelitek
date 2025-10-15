@@ -1,4 +1,7 @@
 AffinePump
 HeatPump_COPs_Pa_Pc
+HeatPump_COPs
+HeatPump_temp
 Examples
 BaseClasses
+HeatPump_COPs_temporary
