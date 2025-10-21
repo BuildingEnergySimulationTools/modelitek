@@ -4,7 +4,7 @@ model HeatPump_COPs_Pa_Pc
   Modelica.Blocks.Sources.Sine sine1(amplitude = 20, f = 1e-6, offset = 273.15 + 25) annotation(
     Placement(transformation(origin = {-89, -79}, extent = {{-10, -10}, {10, 10}})));
   Buildings.Fluid.Sources.Boundary_pT downstream_boundary(redeclare package Medium = Buildings.Media.Water "Water", T = 273.15 + 30, nPorts = 1, p = 1e5) annotation(
-    Placement(transformation(origin = {84, -86}, extent = {{10, -10}, {-10, 10}})));
+    Placement(transformation(origin = {84, -88}, extent = {{10, -10}, {-10, 10}})));
   Buildings.Fluid.Sources.Boundary_pT upstream_boundary(redeclare package Medium = Buildings.Media.Antifreeze.PropyleneGlycolWater(X_a = 0.40, property_T = 293.15) "Propylene glycol water, 40% mass fraction", T = 273.15 + 30, nPorts = 1, p = 1e5) annotation(
     Placement(transformation(origin = {-40, -132}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.RealExpression T_constant_downstream(y = 273.15 + 18) "1 for winter" annotation(
@@ -25,7 +25,7 @@ equation
  connect(sine1.y, upstream_source.T_in) annotation(
     Line(points = {{-78, -78}, {-54, -78}, {-54, -76}}, color = {0, 0, 127}));
  connect(DHW_or_heating.y, heatPump_COPs_new.demande) annotation(
-    Line(points = {{-80, -146}, {12, -146}, {12, -122}}, color = {0, 0, 127}));
+    Line(points = {{-81, -146}, {11, -146}, {12, -122}}, color = {0, 0, 127}));
  connect(Period.y, heatPump_COPs_new.period) annotation(
     Line(points = {{-4, -164}, {22, -164}, {22, -122}}, color = {0, 0, 127}));
  connect(on_off.y, heatPump_COPs_new.y) annotation(
@@ -39,7 +39,7 @@ equation
  connect(T_constant_downstream.y, downstream_source.T_in) annotation(
     Line(points = {{116, -130}, {96, -130}}, color = {0, 0, 127}));
  connect(heatPump_COPs_new.port_b_loa, downstream_boundary.ports[1]) annotation(
-    Line(points = {{38, -94}, {40, -94}, {40, -86}, {74, -86}}, color = {0, 127, 255}));
+    Line(points = {{38, -94}, {40, -94}, {40, -88}, {74, -88}}, color = {0, 127, 255}));
   annotation(
     Documentation(info = "<html><head></head><body>
 <h4>Overview</h4>
