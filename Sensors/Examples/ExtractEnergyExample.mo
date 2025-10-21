@@ -35,7 +35,7 @@ equation
   annotation(
     Diagram(coordinateSystem(extent = {{-20, 100}, {160, -20}})),
     Icon(graphics = {Ellipse(lineColor = {75, 138, 73}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Polygon(lineColor = {0, 0, 255}, fillColor = {75, 138, 73}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, points = {{-36, 60}, {64, 0}, {-36, -60}, {-36, 60}})}),
-    experiment(StartTime = 0, StopTime = 100000, Tolerance = 1e-06, Interval = 602.41),
+    experiment(StartTime = 0, StopTime = 100000, Tolerance = 1e-06, Interval = 606.061),
     Documentation(info = "<html><head></head><body><strong data-start=\"1649\" data-end=\"1676\">Purpose of the example:</strong><br><div>
 <ul data-start=\"1680\" data-end=\"2146\">
 <li data-start=\"1680\" data-end=\"1810\">
@@ -55,6 +55,6 @@ This type of setup is useful for:</p>
 </li>
 <li data-start=\"2353\" data-end=\"2440\">
 <p data-start=\"2355\" data-end=\"2440\">Demonstrating how to couple external control signals with fluid-based energy flows.</p></li></ul><!--EndFragment--></div></body></html>"),
-    __OpenModelica_commandLineOptions = "--matchingAlgorithm=PFPlusExt --indexReductionMethod=dynamicStateSelection -d=initialization,NLSanalyticJacobian -d=aliasConflicts -d=aliasConflicts -d=aliasConflicts",
+    __OpenModelica_commandLineOptions = "--matchingAlgorithm=PFPlusExt --indexReductionMethod=dynamicStateSelection -d=initialization,NLSanalyticJacobian -d=aliasConflicts -d=aliasConflicts -d=aliasConflicts -d=aliasConflicts",
     __OpenModelica_simulationFlags(lv = "LOG_STDOUT,LOG_ASSERT,LOG_STATS", s = "dassl", variableFilter = ".*"));
 end ExtractEnergyExample;

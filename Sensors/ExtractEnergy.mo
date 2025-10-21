@@ -21,11 +21,11 @@ model ExtractEnergy
   Modelica.Blocks.Sources.RealExpression minFlow(y = 0.5) "Minimum flow to allow load injection" annotation(
     Placement(transformation(origin = {-42, 202}, extent = {{12, -88}, {28, -70}})));
   Modelica.Blocks.Logical.GreaterEqual flowOK annotation(
-    Placement(transformation(origin = {24, 54}, extent = {{-8, 60}, {8, 44}})));
+    Placement(transformation(origin = {22, 54}, extent = {{-8, 60}, {8, 44}})));
   Modelica.Blocks.Logical.Switch safeSwitch annotation(
     Placement(transformation(origin = {-78, -20}, extent = {{-8, -8}, {8, 8}}, rotation = 90)));
   Modelica.Blocks.Sources.RealExpression zeroPower(y = 0) annotation(
-    Placement(transformation(origin = {-88, 20}, extent = {{54, -68}, {38, -50}})));
+    Placement(transformation(origin = {-92, 16}, extent = {{54, -68}, {38, -50}})));
   // --- Logic: enable pump flow only if P_demand > Pmin
   // --- Heat flow prescribed
   Modelica.Blocks.Logical.GreaterEqual seasoncheck annotation(
@@ -54,24 +54,11 @@ protected
 equation
 // Pump circulation with controlled flow
   connect(T2.port_b, port_b);
-// Flow check
-  connect(minFlow.y, flowOK.u2) annotation(
-    Line(points = {{-13.2, 123}, {4.8, 123}, {4.8, 111}, {14.8, 111}}, color = {0, 0, 127}));
+
 // Pump flow logic
-// Heat flow safety switch
-  connect(flowOK.y, safeSwitch.u2) annotation(
-    Line(points = {{33, 106}, {36, 106}, {36, -30}, {-78, -30}}, color = {255, 0, 255}));
-  connect(zeroPower.y, safeSwitch.u3) annotation(
-    Line(points = {{-50.8, -39}, {-71.6, -39}, {-71.6, -30}}, color = {0, 0, 127}));
 // Heat flow connection
   connect(T2.port_b, port_b) annotation(
     Line(points = {{62, 62}, {100, 62}}, color = {0, 127, 255}));
-  connect(zeroPower.y, safeSwitch.u3) annotation(
-    Line(points = {{-12, -20}, {-30, -20}, {-30, -12}}, color = {0, 0, 127}));
-  connect(minFlow.y, flowOK.u2) annotation(
-    Line(points = {{-14, 104}, {4, 104}, {4, 92}, {14, 92}}, color = {0, 0, 127}));
-  connect(flowOK.y, safeSwitch.u2) annotation(
-    Line(points = {{32, 86}, {36, 86}, {36, -4}, {-38, -4}, {-38, 4}}, color = {255, 0, 255}));
   connect(seasonMode, seasoncheck.u1) annotation(
     Line(points = {{-182, 22}, {-108, 22}}, color = {0, 0, 127}));
   connect(seasonswitch.y, seasoncheck.u2) annotation(
@@ -91,7 +78,7 @@ equation
   connect(port_a, Flowrate_sensor.port_a) annotation(
     Line(points = {{-150, 62}, {-118, 62}}));
   connect(flowOK.u1, Flowrate_sensor.m_flow) annotation(
-    Line(points = {{14, 106}, {-108, 106}, {-108, 74}}, color = {0, 0, 127}));
+    Line(points = {{12, 106}, {-108, 106}, {-108, 74}}, color = {0, 0, 127}));
   connect(T1.port_b, hea.port_a) annotation(
     Line(points = {{-50, 62}, {-14, 62}}, color = {0, 127, 255}));
   connect(hea.port_b, T2.port_a) annotation(
@@ -106,6 +93,12 @@ equation
     Line(points = {{22, 20}, {22, 21.5}, {30, 21.5}, {30, 21}}, color = {0, 0, 127}));
   connect(limiter.y, hea.u) annotation(
     Line(points = {{50, 22}, {62, 22}, {62, 42}, {-16, 42}, {-16, 68}}, color = {0, 0, 127}));
+  connect(flowOK.y, safeSwitch.u2) annotation(
+    Line(points = {{31, 106}, {36, 106}, {36, -62}, {-78, -62}, {-78, -30}}, color = {255, 0, 255}));
+  connect(zeroPower.y, safeSwitch.u3) annotation(
+    Line(points = {{-54, -42}, {-72, -42}, {-72, -30}}, color = {0, 0, 127}));
+  connect(minFlow.y, flowOK.u2) annotation(
+    Line(points = {{-14, 124}, {0, 124}, {0, 112}, {12, 112}}, color = {0, 0, 127}));
   annotation(
     Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-140, 80}, {160, -120}}), graphics = {Rectangle(origin = {10, -2}, lineColor = {255, 255, 255}, fillColor = {238, 238, 238}, fillPattern = FillPattern.Solid, extent = {{-72, 78}, {76, -76}}), Rectangle(origin = {54, 0}, fillColor = {238, 46, 47}, fillPattern = FillPattern.Solid, extent = {{-92, -18}, {2, -36}}), Rectangle(origin = {8, 0}, fillColor = {0, 128, 255}, fillPattern = FillPattern.Solid, extent = {{-2, -18}, {64, -36}}), Rectangle(origin = {12, -17}, fillColor = {162, 29, 33}, fillPattern = FillPattern.Solid, extent = {{-10, 55}, {11, -59}}), Polygon(origin = {14, -76}, fillColor = {162, 29, 33}, fillPattern = FillPattern.Solid, points = {{-50, 100}, {-2, 154}, {48, 100}, {14, 100}, {-50, 100}}), Text(origin = {4, 202}, textColor = {0, 0, 255}, extent = {{-148, -326}, {152, -286}}, textString = "%name")}),
     Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-200, 140}, {120, -140}}), graphics = {Rectangle(origin = {5, 114}, extent = {{-57, 22}, {57, -22}}), Text(origin = {27, 126}, extent = {{-31, 6}, {31, 0}}, textString = "check flow > 0 before injecting power"), Rectangle(origin = {-110, 22}, extent = {{86, -30}, {-86, 30}}), Text(origin = {-168, 44}, extent = {{-26, 4}, {26, -4}}, textString = "positive or negative according to season")}),
