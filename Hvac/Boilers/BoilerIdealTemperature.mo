@@ -35,15 +35,14 @@ equation
 // Etat thermo au retour pour calcul Cp
   state_retour = Medium.setState_pTX(p = port_a.p, T = senTretour.T, X = Medium.X_default);
 // Puissance utile
-  Q_boil = efficiency*max(0, senMasFlo.m_flow)*Medium.specificHeatCapacityCp(state_retour)*(T_consigne - senTretour.T);
+  Q_boil = 1/efficiency*max(0, senMasFlo.m_flow)*Medium.specificHeatCapacityCp(state_retour)*(T_consigne - senTretour.T);
   connect(port_a, senTretour.port) annotation(
     Line(points = {{-100, 0}, {-76, 0}, {-76, 28}}));
   connect(port_a, senMasFlo.port_a) annotation(
     Line(points = {{-100, 0}, {-60, 0}}));
   connect(senMasFlo.port_b, boilerBoundary.ports[1]) annotation(
     Line(points = {{-40, 0}, {-22, 0}, {-22, -24}, {-6, -24}}, color = {0, 127, 255}));
-  connect(port_a, senTretour.port) annotation(
-    Line(points = {{-100, 0}, {-40, 0}, {-40, 30}}));
+
   connect(T_consigne, boilerBoundary1.T_in) annotation(
     Line(points = {{0, -80}, {42, -80}, {42, 4}, {54, 4}}, color = {0, 0, 127}));
   connect(boilerBoundary1.ports[1], port_b) annotation(

@@ -90,6 +90,49 @@ equation
     Line(points={{98,20},{140, 20}}, color={0,0,127}));
 
   annotation(
+  Documentation(info= "<html><head></head><body><p>
+This controller computes a mass flow command <code>m_flow_cmd</code> by combining:
+</p>
+
+<ul>
+<li><b>Feedforward term</b>: theoretical flow based on the demanded power 
+(Q_demand) and the setpoint temperature difference ΔT_set:
+<pre>m = Q_demand / (cp * ΔT_set)</pre></li>
+
+<li><b>PID correction</b>: feedback loop acting on the error between the 
+measured temperature difference (T_depart – T_retour) and the setpoint ΔT_set.</li>
+</ul>
+
+<p>
+The two contributions are summed and then limited between 0 and 
+<code>m_flow_max</code>, representing the physical pump capacity.
+</p>
+
+<h4>Inputs</h4>
+<ul>
+<li><b>Q_demand [W]</b>: requested heating/cooling power</li>
+<li><b>T_depart [K]</b>: supply temperature</li>
+<li><b>T_retour [K]</b>: return temperature</li>
+<li><b>DeltaT_set [K]</b>: desired temperature difference</li>
+</ul>
+
+<h4>Output</h4>
+<ul>
+<li><b>m_flow_cmd [kg/s]</b>: commanded mass flow rate</li>
+</ul>
+
+<h4>Parameters</h4>
+<ul>
+<li><b>m_flow_max</b>: maximum allowed flow</li>
+<li><b>kPID, Ti, Td</b>: PID gains</li>
+<li><b>initType</b>: initialization method</li>
+</ul>
+
+<p>
+The model ensures robust ΔT control by combining feedforward estimation 
+with closed-loop PID adjustment.
+</p>
+</body></html>"),
     Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
       Rectangle(extent={{-100,100},{100,-100}}, fillPattern=FillPattern.Solid, fillColor={200,220,255}),
       Text(extent={{-90,70},{90,40}}, textString="m = Q/(cpΔT) + PID"),

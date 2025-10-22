@@ -2,11 +2,11 @@ within Modelitek.Hvac.HeatPumps.PAC_air_eau;
 
 model Calcul_chauf_clim
   
-  parameter Real LR_contmin(unit = "%") = 0.2;
+  parameter Real LR_contmin(unit = "1") = 0.2;
   //taux de charge minimal que peut maintenir le générateur thermodynamique pour le mode considéré (0-1)
-  parameter Real CCP_LRcontmin(unit = "%") = 1;
+  parameter Real CCP_LRcontmin(unit = "1") = 1;
   //ratio du COP (ou EER) au taux de charge LRcontmin sur le COP (ou EER) à pleine charge
-  parameter Real Taux(unit = "%") = 0.02;
+  parameter Real Taux(unit = "1") = 0.02;
   //ratio puissance auxiliaire à charge nulle sur la puissance absorbée à plein charge au point pivot
   parameter Real Deq(unit = "minutes") = 0.5;
   //la durée de fonctionnement à charge tendant vers 0

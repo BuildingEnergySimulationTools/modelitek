@@ -43,9 +43,9 @@ model WaterHeater
     Placement(transformation(origin = {-48, -14}, extent = {{-10, 10}, {10, -10}}, rotation = -0)));
 
   Modelica.Blocks.Logical.GreaterEqual seasoncheck annotation(
-    Placement(transformation(origin = {2, -182.5}, extent = {{-7, 52.5}, {7, 38.5}})));
+    Placement(transformation(origin = {6, -90.5}, extent = {{-7, -52.5}, {7, -38.5}}, rotation = -0)));
 
-  Modelica.Blocks.Math.Gain multiplier(k = +1) annotation(
+  Modelica.Blocks.Math.Gain multiplier(k = -1) annotation(
     Placement(transformation(origin = {34, -148}, extent = {{-6, -6}, {6, 6}})));
 
   Modelica.Blocks.Interfaces.RealInput seasonMode(unit = "W") "Seasonal mode selector: Heating=1, Cooling=2, Off=3" annotation(
@@ -56,9 +56,9 @@ model WaterHeater
     Placement(transformation(origin = {54, -137}, extent = {{-7, -7}, {7, 7}})));
 
   Modelica.Blocks.Sources.RealExpression seasonswitch(y=0.5) "Threshold Pmin" annotation(
-    Placement(transformation(origin = {40, -57}, extent = {{-82, -74}, {-62, -54}})));
+    Placement(transformation(origin = {38, -85}, extent = {{-82, -74}, {-62, -54}})));
 
-  Modelica.Blocks.Math.Gain multiplier1(k=-1) annotation(
+  Modelica.Blocks.Math.Gain multiplier1(k=+1) annotation(
     Placement(transformation(origin = {31, -120}, extent = {{-6, -6}, {6, 6}})));
 
   Modelica.Blocks.Sources.RealExpression minFlow(y=0.05) "Minimum flow to allow load injection" annotation(
@@ -82,11 +82,9 @@ equation
   connect(gain.y, prescribedHeatFlow.Q_flow) annotation(
     Line(points = {{-48, -74}, {-36, -74}, {-36, -66}}, color = {0, 0, 127}));
   connect(seasonMode, seasoncheck.u1) annotation(
-    Line(points = {{-80, -136}, {-6, -136}}, color = {0, 0, 127}));
-  connect(seasonswitch.y, seasoncheck.u2) annotation(
-    Line(points = {{-20, -120}, {-6, -120}, {-6, -132}}, color = {0, 0, 127}));
+    Line(points = {{-80, -136}, {-2, -136}}, color = {0, 0, 127}));
   connect(seasoncheck.y, ss.u2) annotation(
-    Line(points = {{10, -136}, {46, -136}}, color = {255, 0, 255}));
+    Line(points = {{14, -136}, {46, -136}}, color = {255, 0, 255}));
   connect(multiplier1.y, ss.u1) annotation(
     Line(points = {{38, -120}, {46, -120}, {46, -132}}, color = {0, 0, 127}));
   connect(multiplier.y, ss.u3) annotation(
@@ -107,6 +105,8 @@ equation
     Line(points = {{-48, -24}, {-50, -24}, {-50, -48}, {-110, -48}, {-110, -260}, {-4, -260}}, color = {0, 0, 127}));
   connect(ss.y, gain.u) annotation(
     Line(points = {{62, -136}, {66, -136}, {66, -98}, {-82, -98}, {-82, -74}, {-72, -74}}, color = {0, 0, 127}));
+  connect(seasonswitch.y, seasoncheck.u2) annotation(
+    Line(points = {{-22, -148}, {-12, -148}, {-12, -142}, {-2, -142}}, color = {0, 0, 127}));
   annotation(
     uses(Buildings(version = "12.1.0"), Modelica(version = "4.0.0")),
     Diagram(graphics = {

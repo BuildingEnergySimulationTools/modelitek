@@ -8,7 +8,7 @@ model HeatingSetpointSimple
   Modelica.Blocks.Interfaces.RealInput Text(unit="K") annotation(
     Placement(transformation(origin = {-18, 4}, extent = {{-276, 78}, {-250, 104}}), iconTransformation(extent = {{-102, 36}, {-76, 62}})));
   Modelica.Blocks.Math.Gain a(k = params.a) annotation(
-    Placement(transformation(origin = {100.667, -54.6667}, extent = {{-326.667, 136.667}, {-306.667, 156.667}})));
+    Placement(transformation(origin = {102.667, -54.6667}, extent = {{-326.667, 136.667}, {-306.667, 156.667}})));
   Modelica.Blocks.Interfaces.RealOutput Tsetpoint(unit="K") annotation(
     Placement(transformation(origin = {-30, 36}, extent = {{-88, 14}, {-62, 40}}), iconTransformation(extent = {{100, -20}, {128, 8}})));
   parameter Data.params_heattanksimple params annotation(
@@ -18,18 +18,18 @@ model HeatingSetpointSimple
   Modelica.Thermal.HeatTransfer.Celsius.ToKelvin toKelvin annotation(
     Placement(transformation(origin = {-136, 64}, extent = {{-10, -10}, {10, 10}})));
 equation
-  connect(a.y, CnsRefChf.u1) annotation(
-    Line(points = {{-205, 92}, {-182, 92}, {-182, 68}, {-180, 68}}, color = {0, 0, 127}, smooth = Smooth.Bezier));
   connect(b.y, CnsRefChf.u2) annotation(
     Line(points = {{-204, 58}, {-180, 58}}, color = {0, 0, 127}));
   connect(Text, fromKelvin.Kelvin) annotation(
     Line(points = {{-280, 96}, {-258, 96}}, color = {0, 0, 127}));
-  connect(fromKelvin.Celsius, a.u) annotation(
-    Line(points = {{-234, 96}, {-228, 96}, {-228, 92}}, color = {0, 0, 127}));
   connect(CnsRefChf.y, toKelvin.Celsius) annotation(
     Line(points = {{-160, 64}, {-148, 64}}, color = {0, 0, 127}));
   connect(toKelvin.Kelvin, Tsetpoint) annotation(
     Line(points = {{-124, 64}, {-104, 64}}, color = {0, 0, 127}));
+  connect(fromKelvin.Celsius, a.u) annotation(
+    Line(points = {{-234, 96}, {-226, 96}, {-226, 92}}, color = {0, 0, 127}));
+  connect(a.y, CnsRefChf.u1) annotation(
+    Line(points = {{-202, 92}, {-188, 92}, {-188, 68}, {-180, 68}}, color = {0, 0, 127}));
   annotation(
     Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(fillColor = {170, 170, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(origin = {90, -216}, textColor = {0, 0, 255}, extent = {{-162, 186}, {-18, 246}}, textString = "%name")}),
     Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-280, 120}, {-100, 40}})),

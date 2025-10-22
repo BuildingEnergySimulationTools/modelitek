@@ -1,9 +1,9 @@
 within Modelitek.Hvac.HeatPumps.PAC_air_eau;
 
 model Limit_temp_ch_ECS
-  parameter Real Theta_max_av(unit = "°C") = 65;
+  parameter Real Theta_max_av(unit = "degC") = 65;
   //Température max départ avale
-  parameter Real Theta_min_am(unit = "°C") = -10;
+  parameter Real Theta_min_am(unit = "degC") = -10;
   //Température min amont
   Modelica.Blocks.Interfaces.RealOutput Pfou_pc annotation(
     Placement(visible = true, transformation(origin = {285, 147}, extent = {{-9, -9}, {9, 9}}, rotation = 0), iconTransformation(origin = {110, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
