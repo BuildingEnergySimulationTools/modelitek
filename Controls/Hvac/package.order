@@ -4,3 +4,5 @@ TankControl
 HeatingSetpoint
 HeatpumpControl
 HeatingSetpointSimple
+HeatingSetpoint_old
+CoolingSetpoint
