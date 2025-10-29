@@ -36,7 +36,7 @@ model MassFlowControllerHybrid "Débit = Q/(cp*ΔT) + PID sur ΔT"
   // --- Calcul feedforward m = Q/(cp*ΔT) ---
   Modelitek.Sensors.MassFlowCalculator mcalc(redeclare package Medium = Medium)
     "Débit théorique"
-    annotation(Placement(transformation(origin={-20,60}, extent={{-10,-10},{10,10}})));
+    annotation(Placement(transformation(origin={-16,54}, extent={{-10,-10},{10,10}})));
 
   // --- Mesure ΔT = Tdep - Tret ---
   Modelica.Blocks.Math.Add deltaMeas(k2=-1)
@@ -61,9 +61,9 @@ model MassFlowControllerHybrid "Débit = Q/(cp*ΔT) + PID sur ΔT"
 equation
   // Feedforward
   connect(Q_demand, mcalc.Q_demand) annotation(
-    Line(points={{-120,60},{-30,60}}, color={0,0,127}));
+    Line(points={{-120,60},{-28,60}}, color={0,0,127}));
   connect(DeltaT_set, mcalc.DeltaT) annotation(
-    Line(points={{-120,-70},{-80,-70},{-80,40},{-20,40},{-20,50}}, color={0,0,127}));
+    Line(points={{-120,-70},{-80,-70},{-80,48},{-28,48}}, color={0,0,127}));
 
   // ΔT mesuré
   connect(T_depart, deltaMeas.u1) annotation(
@@ -79,7 +79,7 @@ equation
 
   // Somme FF + PID
   connect(mcalc.m_flow_calc, addFF.u1) annotation(
-    Line(points={{-10,60},{40,60},{40,26},{50,26}}, color={0,0,127}));
+    Line(points={{-4,54},{40,54},{40,26},{50,26}}, color={0,0,127}));
   connect(pid.y, addFF.u2) annotation(
     Line(points={{40,-20},{48,-20},{48,14},{50,14}}, color={0,0,127}));
 

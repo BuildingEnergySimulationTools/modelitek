@@ -18,7 +18,7 @@ model HeatingSetpoint
   // --- Entrée/Sortie ---
   Modelica.Blocks.Interfaces.RealInput Text(unit="degC") 
     "Température extérieure"
-    annotation(Placement(transformation(extent={{-120,-20},{-100,0}})));
+    annotation(Placement(transformation(origin = {0, 10}, extent = {{-120, -20}, {-100, 0}}), iconTransformation(extent = {{-120, -20}, {-100, 0}})));
   Modelica.Blocks.Interfaces.RealOutput Tsetpoint(unit="degC") 
     "Consigne de départ chauffage"
     annotation(Placement(transformation(extent={{100,-10},{120,10}})));
@@ -40,13 +40,12 @@ equation
                 fillPattern=FillPattern.Solid, lineColor={0,0,255}),
       Text(extent={{-80,20},{80,-20}}, textString="Heating\nSetpoint")
     }),
-    Documentation(info="
-<h4>HeatingSetpoint</h4>
+    Documentation(info= "<html><head></head><body><h4>HeatingSetpoint</h4>
 <p>Calcule la température de départ chauffage selon une loi d’eau :</p>
 <ul>
 <li><b>Mode 1</b> : spécifier 2 points (Text1,Tset1) et (Text2,Tset2).</li>
 <li><b>Mode 2</b> : spécifier directement la pente <i>a</i> et l’ordonnée <i>b</i>.</li>
 </ul>
 <p>Équation : Tset = a*Text + b</p>
-"));
+</body></html>"));
 end HeatingSetpoint;

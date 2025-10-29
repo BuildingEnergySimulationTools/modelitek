@@ -15,7 +15,7 @@ model WaterHeater
     nPorts = 2,
     redeclare package Medium = Medium,
     V = V,
-    m_flow_nominal = m_flow_nominal) annotation(
+    m_flow_nominal = m_flow_nominal, allowFlowReversal = false) annotation(
       Placement(transformation(origin = {0, -24}, extent = {{-10, 10}, {10, -10}}, rotation = -0)));
 
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow prescribedHeatFlow annotation(
@@ -39,7 +39,7 @@ model WaterHeater
   Modelica.Blocks.Sources.RealExpression zeroPower(y=0) annotation(
     Placement(transformation(origin = {-9, -146}, extent = {{54, -68}, {38, -50}})));
 
-  Buildings.Fluid.Sensors.MassFlowRate senMasFlo(redeclare package Medium = Medium) annotation(
+  Buildings.Fluid.Sensors.MassFlowRate senMasFlo(redeclare package Medium = Medium, allowFlowReversal = false) annotation(
     Placement(transformation(origin = {-48, -14}, extent = {{-10, 10}, {10, -10}}, rotation = -0)));
 
   Modelica.Blocks.Logical.GreaterEqual seasoncheck annotation(
@@ -48,7 +48,7 @@ model WaterHeater
   Modelica.Blocks.Math.Gain multiplier(k = -1) annotation(
     Placement(transformation(origin = {34, -148}, extent = {{-6, -6}, {6, 6}})));
 
-  Modelica.Blocks.Interfaces.RealInput seasonMode(unit = "W") "Seasonal mode selector: Heating=1, Cooling=2, Off=3" annotation(
+  Modelica.Blocks.Interfaces.RealInput seasonMode(unit = "W") "Seasonal mode selector: Heating=0, Cooling=1" annotation(
     Placement(transformation(origin = {-80, -137}, extent = {{20, -20}, {-20, 20}}, rotation = -180),
     iconTransformation(origin = {96, -53}, extent = {{30, -82}, {-10, -42}}, rotation = 270)));
 
