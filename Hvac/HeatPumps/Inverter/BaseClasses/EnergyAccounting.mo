@@ -13,6 +13,14 @@ model EnergyAccounting
   Modelica.Blocks.Interfaces.BooleanInput mode_ECS
     annotation(Placement(transformation(extent={{-120,-100},{-100,-80}})));
 
+ // Intégrateurs pour SCOP
+Modelica.Blocks.Continuous.Integrator E_utile(y_start=0)
+  annotation(Placement(transformation(extent={{-40,60},{-20,80}})));
+Modelica.Blocks.Continuous.Integrator E_abs(y_start=0)
+  annotation(Placement(transformation(extent={{-40,20},{-20,40}})));
+
+
+
   // Sorties
   Modelica.Blocks.Interfaces.RealOutput Q_ch
     annotation(Placement(transformation(origin = {0, -20}, extent = {{100, 80}, {120, 100}}), iconTransformation(origin = {0, -18}, extent = {{100, 80}, {120, 100}})));
@@ -29,13 +37,18 @@ protected
   Real COP_inst;
 
 equation
+connect(P_utile, E_utile.u);
+connect(P_abs, E_abs.u);
+
+SCOP = if E_abs.y > 0 then E_utile.y / E_abs.y else 0;
+
   Q_ch   = if mode_chauffage then P_utile else 0;
   Q_clim = if mode_clim then P_utile else 0;
   Q_ECS  = if mode_ECS then P_utile else 0;
   Q_tot  = Q_ch + Q_clim + Q_ECS;
 
   COP_inst = if P_abs > 0 then P_utile / P_abs else 0;
-  SCOP = COP_inst;
+//  SCOP = COP_inst;
 
 
 annotation(
