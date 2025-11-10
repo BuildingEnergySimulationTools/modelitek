@@ -10,12 +10,13 @@ model WaterHeater
   parameter Modelica.Units.SI.MassFlowRate m_flow_nominal = 0.2;
   parameter Modelica.Units.SI.Volume V = 0.01;
   parameter Real efficiency = 1;
+  parameter Boolean allowFlowReversal_global = true "Allow flow reversal globally";
 
   Buildings.Fluid.MixingVolumes.MixingVolume vol(
     nPorts = 2,
     redeclare package Medium = Medium,
     V = V,
-    m_flow_nominal = m_flow_nominal, allowFlowReversal = false) annotation(
+    m_flow_nominal = m_flow_nominal, allowFlowReversal = allowFlowReversal_global, energyDynamics = Modelica.Fluid.Types.Dynamics.SteadyState, massDynamics = Modelica.Fluid.Types.Dynamics.SteadyState) annotation(
       Placement(transformation(origin = {0, -24}, extent = {{-10, 10}, {10, -10}}, rotation = -0)));
 
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow prescribedHeatFlow annotation(
@@ -69,7 +70,8 @@ model WaterHeater
 
   Modelica.Blocks.Math.Gain gain(k = efficiency) annotation(
     Placement(transformation(origin = {-60, -74}, extent = {{-10, -10}, {10, 10}})));
-
+  Modelica.Blocks.Math.Abs abs1 annotation(
+    Placement(transformation(origin = {-36, -258}, extent = {{-10, -10}, {10, 10}})));
 equation
   connect(port_a, senMasFlo.port_a) annotation(
     Line(points = {{-84, -14}, {-58, -14}}));
@@ -101,12 +103,14 @@ equation
     Line(points = {{-30, -244}, {-18, -244}, {-18, -254}, {-4, -254}}, color = {0, 0, 127}));
   connect(flowOK.y, safeSwitch.u2) annotation(
     Line(points = {{14, -260}, {22, -260}, {22, -218}, {6, -218}, {6, -192}}, color = {255, 0, 255}));
-  connect(senMasFlo.m_flow, flowOK.u1) annotation(
-    Line(points = {{-48, -24}, {-50, -24}, {-50, -48}, {-110, -48}, {-110, -260}, {-4, -260}}, color = {0, 0, 127}));
   connect(ss.y, gain.u) annotation(
     Line(points = {{62, -136}, {66, -136}, {66, -98}, {-82, -98}, {-82, -74}, {-72, -74}}, color = {0, 0, 127}));
   connect(seasonswitch.y, seasoncheck.u2) annotation(
     Line(points = {{-22, -148}, {-12, -148}, {-12, -142}, {-2, -142}}, color = {0, 0, 127}));
+  connect(abs1.y, flowOK.u1) annotation(
+    Line(points = {{-24, -258}, {-20, -258}, {-20, -260}, {-4, -260}}, color = {0, 0, 127}));
+  connect(senMasFlo.m_flow, abs1.u) annotation(
+    Line(points = {{-48, -24}, {-54, -24}, {-54, -50}, {-108, -50}, {-108, -258}, {-48, -258}}, color = {0, 0, 127}));
   annotation(
     uses(Buildings(version = "12.1.0"), Modelica(version = "4.0.0")),
     Diagram(graphics = {
