@@ -27,7 +27,7 @@ protected
   parameter SI.SpecificHeatCapacity cp = Medium.specificHeatCapacityCp(state);
 
 equation
-  m_flow_calc = Q_demand / (cp * DeltaT);
+m_flow_calc = abs(Q_demand / (cp * DeltaT));
 
   annotation(
     Icon(coordinateSystem(extent={{-100,-100},{100,100}}), graphics={
