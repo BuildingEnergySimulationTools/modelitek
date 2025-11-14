@@ -1,7 +1,9 @@
+WaterHeater
 TemperatureFlow
 PumpConsumption
-EnergyMeter
 InjectEnergy
 ExtractEnergy
-Conversions
+EnergyMeter
+MassFlowCalculator
 Examples
+Conversions
