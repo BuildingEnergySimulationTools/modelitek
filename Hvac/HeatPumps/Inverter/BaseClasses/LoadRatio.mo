@@ -37,10 +37,12 @@ equation
        else 0;
 
   // Loi linéaire 
-  COP_mult_lin =
-        CCP_LRcontmin
-        + (1 - CCP_LRcontmin)
-          * (max(LR, LR_contmin) - LR_contmin) / (1 - LR_contmin);
+//  COP_mult_lin =
+//        CCP_LRcontmin
+//        + (1 - CCP_LRcontmin)
+//          * (max(LR, LR_contmin) - LR_contmin) / (1 - LR_contmin);
+   COP_mult_lin=(1+(CCP_LRcontmin-1)*((1-LR)/(1-LR_contmin)));
+
 
   // Loi terrain
   COP_mult =
