@@ -29,48 +29,38 @@ protected
   Real COP_corr;
   Real COP_mult;
   Real COP_mult_lin;
-
 equation
-  // Ratio
-  LR = if noEvent(COP_nom * Pabs_nom > 1e-6) then 
-         P_demande / (COP_nom * Pabs_nom) 
-       else 0;
+// Ratio
+  LR = if noEvent(COP_nom*Pabs_nom > 1e-6) then P_demande/(COP_nom*Pabs_nom) else 0;
+// Loi linéaire
+//  COP_mult_lin =
+//        CCP_LRcontmin
+//        + (1 - CCP_LRcontmin)
+//          * (max(LR, LR_contmin) - LR_contmin) / (1 - LR_contmin);
+  COP_mult_lin = (1 + (CCP_LRcontmin - 1)*((1 - LR)/(1 - LR_contmin)));
 
-  // Loi linéaire 
-  COP_mult_lin =
-        CCP_LRcontmin
-        + (1 - CCP_LRcontmin)
-          * (max(LR, LR_contmin) - LR_contmin) / (1 - LR_contmin);
 
-  // Loi terrain
-  COP_mult =
-        if LR < 0.2 then 0.35
-        elseif LR < 0.4 then 0.65 + (LR - 0.2)/0.2 * (0.85 - 0.65)
-        elseif LR < 0.99 then 1.0
-        else 0.7;
-
-  // ===== Sélection loi de correction COP =====
-  if not Inverter then
+// Loi terrain // proposition F.P.
+  COP_mult = if LR < 0.2 then 0.35 elseif LR < 0.4 then 0.65 + (LR - 0.2)/0.2*(0.85 - 0.65)
+   elseif LR < 0.99 then 1.0 else 0.7;
+   
+   
+// ===== Sélection loi de correction COP =====
+  if Inverter then
     COP_corr = COP_nom;
-
   else
     if mode_LR == 1 then
-      // --- Loi linéaire standard ---
-      COP_corr = COP_nom * COP_mult_lin;
-
+// --- Loi linéaire standard ---
+      COP_corr = COP_nom*COP_mult_lin;
     else
-      // --- Loi terrain multi-zones ---
-      COP_corr = COP_nom * COP_mult;
-
+// --- Loi terrain multi-zones ---
+      COP_corr = COP_nom*COP_mult;
     end if;
   end if;
-
-  // Sorties corrigées
-  P_utile = COP_corr * Pabs_nom * LR;
-  P_abs   = Pabs_nom * LR + Taux * Pabs_nom * (1 - LR);
-
-
-annotation(
+// Sorties corrigées
+  P_utile = COP_corr*Pabs_nom*LR;
+  P_abs = Pabs_nom*LR + Taux*Pabs_nom*(1 - LR);
+  annotation(
     Diagram(coordinateSystem(extent = {{-120, 80}, {0, -20}}), graphics),
     Icon(coordinateSystem(extent = {{-120, 80}, {20, -20}}), graphics = {Rectangle(origin = {-54, 30}, fillColor = {85, 255, 255}, fillPattern = FillPattern.Solid, extent = {{58, -46}, {-58, 46}}), Text(origin = {-53, 108}, textColor = {0, 0, 255}, extent = {{-107, 26}, {107, -26}}, textString = "%name")}));
 end LoadRatio;
