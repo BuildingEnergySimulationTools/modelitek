@@ -1,6 +1,6 @@
-within Modelitek.Hvac.HeatPumps.PAC_air_eau;
+within Modelitek.Hvac.HeatPumps.Examples;
 
-model test_hp_matrix
+model HPmatrixExample
   HPmatrix hPmatrix(LRcontmin = 0.4)  annotation(
     Placement(transformation(origin = {4, -4}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.RealExpression tamont(y = -7)  annotation(
@@ -16,4 +16,4 @@ equation
     Line(points = {{-60, 6}, {-40, 6}, {-40, 2}, {-6, 2}}, color = {0, 0, 127}));
   connect(ramp.y, hPmatrix.Q_req) annotation(
     Line(points = {{-58, -62}, {-28, -62}, {-28, -10}, {-6, -10}}, color = {0, 0, 127}));
-end test_hp_matrix;
+end HPmatrixExample;

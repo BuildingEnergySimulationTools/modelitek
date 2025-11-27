@@ -1,4 +1,4 @@
-within Modelitek.Hvac.HeatPumps.PAC_air_eau;
+within Modelitek.Hvac.HeatPumps;
 
 model HPmatrix
   parameter Real COP_pivot = 2.81;
@@ -28,10 +28,10 @@ model HPmatrix
   Real CCP_lr_contmin_net;
   
   parameter Real COP_M[6,6] = 
-      compute55EffMatrix(Pivot=COP_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_cop, Cnnam=Cnnam_cop, userData=userData_cop);
+      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(Pivot=COP_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_cop, Cnnam=Cnnam_cop, userData=userData_cop);
       
   parameter Real Pabs_M[6,6] = 
-      compute55EffMatrix(Pivot=Pabs_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_pabs, Cnnam=Cnnam_pabs, userData=userData_pabs);
+      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(Pivot=Pabs_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_pabs, Cnnam=Cnnam_pabs, userData=userData_pabs);
 
   Modelica.Blocks.Tables.CombiTable2Ds COP_combi(table=COP_M) annotation(
     Placement(transformation(origin = {0, 44}, extent = {{-10, -10}, {10, 10}})));
@@ -60,7 +60,7 @@ equation
       (LRcontmin*Pabs_combi.y - CcpLRcontmin*P_aux);
 
 
-  (P_comp_lr, P_abs_lr, COP_lr) = computePartLoad(
+  (P_comp_lr, P_abs_lr, COP_lr) = Modelitek.Hvac.HeatPumps.BaseFunctions.computePartLoad(
       LR            = LR,
       LRcontmin     = LRcontmin,
       COP_pc           = COP_combi.y,

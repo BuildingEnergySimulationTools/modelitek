@@ -1,4 +1,4 @@
-within Modelitek.Hvac.HeatPumps.PAC_air_eau;
+within Modelitek.Hvac.HeatPumps.BaseFunctions;
 
 function computePartLoad
   input Real P_fou;
@@ -16,7 +16,6 @@ function computePartLoad
   output Real P_abs  "Total absorbed power at part load";
   output Real COP "Final COP at part load";
 
-  // Compute calibration term
   protected Real CCP_lr_contmin_net;
   protected Real P_fou_lrcontmin;
   protected Real P_comp_lrcontmin;
@@ -33,13 +32,13 @@ algorithm
 
 
   if LR > LRcontmin and LR <= 1 then
-    // High LR branch
+    // High LR
     COP_lr_net := COP_pc*(1 + (CcpLRcontmin - 1)*(1-LR)/(1-LRcontmin));
     P_comp := P_fou / COP_lr_net;
     P_abs  := P_comp + P_aux;
 
   else
-    // Low LR branch
+    // Low LR
     P_fou_lrcontmin := P_fou_pc * LRcontmin;
     COP_lr_contmin_net := COP_pc * CcpLRcontmin;
 
