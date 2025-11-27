@@ -1,6 +1,8 @@
 within Modelitek.Hvac.HeatPumps.BaseFunctions;
 
 function computePartLoad
+  extends Modelica.Icons.Function;
+
   input Real P_fou;
   input Real LR "Load ratio P_fou / P_fou_pc";
   input Real LRcontmin;

@@ -1,12 +1,14 @@
 within Modelitek.Hvac.HeatPumps.BaseFunctions;
 
 function compute55EffMatrix
+  extends Modelica.Icons.Function;
+
   input Real Pivot;
   input Real Temp_aval[5];
   input Real Temp_amont[5];
-  input Real Cnnav[:]; // Stupid order is 1: 42.5-32.5, 2: 51-42.5, 3: 23.5-32.5, 4: 60-51
-  input Real Cnnam[:]; // Stupid order is 1: -7-7, 2: 2-7, 3: 20-7, 4: -15--7
-  input Real userData[5,5]; // zeros = missing
+  input Real Cnnav[:]; 
+  input Real Cnnam[:]; 
+  input Real userData[5,5];
   output Real M_combi2d[6,6];
   
 protected

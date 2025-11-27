@@ -1,37 +1,37 @@
 within Modelitek.Hvac.HeatPumps;
 
 model HPmatrix
-  parameter Real COP_pivot = 2.81;
-  parameter Real Pabs_pivot = 1000;
-  parameter Real userData_cop[5,5] = zeros(5,5);
-  parameter Real userData_pabs[5,5] = zeros(5,5);
-  parameter Real Taux = 0.02;
-  parameter Real Dfou0 = 12;
-  parameter Real LRcontmin = 0.4; //Taux minimal de charge en fonctionnement continu. (= 1 si machine tout ou rien)
-  parameter Real CcpLRcontmin = 1.; //Coefficient de correction de la performance pour un taux de charge égal à LRcontmin
 
-  parameter Real Deq = 0.5;
-  parameter Real Cnnav_cop[4] = {0.8, 0.8, 1.1, 0.8};
-  parameter Real Cnnam_cop[4] = {0.5, 0.8, 1.25, 0.8};
-  parameter Real Cnnav_pabs[4] = {0.9, 0.915, 1.09, 0.91};
-  parameter Real Cnnam_pabs[4] = {0.86, 0.95, 1.13, 0.92};
-  parameter Real t_amont_rec[5] = {-15., -7., 2., 7., 20.};
-  parameter Real t_aval_rec[5] = {23.5, 32.5, 42.5, 51., 60.};
+  import Modelitek.Hvac.HeatPumps.HPData;
   
+  parameter HPData.AirWater_inf100kW cfg;
+    
   Real P_fou_pc;
   Real LR;
   Real P_comp_pc;
   Real P_aux;
+  
   Real P_comp_lr;
   Real P_abs_lr;
   Real COP_lr;
-  Real CCP_lr_contmin_net;
   
   parameter Real COP_M[6,6] = 
-      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(Pivot=COP_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_cop, Cnnam=Cnnam_cop, userData=userData_cop);
+      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(
+      Pivot=cfg.COP_pivot, 
+      Temp_aval=cfg.t_aval_rec,
+      Temp_amont=cfg.t_amont_rec,
+      Cnnav=cfg.Cnnav_cop,
+      Cnnam=cfg.Cnnam_cop, 
+      userData=cfg.userData_cop);
       
   parameter Real Pabs_M[6,6] = 
-      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(Pivot=Pabs_pivot, Temp_aval=t_aval_rec,Temp_amont=t_amont_rec, Cnnav=Cnnav_pabs, Cnnam=Cnnam_pabs, userData=userData_pabs);
+      Modelitek.Hvac.HeatPumps.BaseFunctions.compute55EffMatrix(
+      Pivot=cfg.Pabs_pivot, 
+      Temp_aval=cfg.t_aval_rec,
+      Temp_amont=cfg.t_amont_rec, 
+      Cnnav=cfg.Cnnav_pabs,
+      Cnnam=cfg.Cnnam_pabs,
+      userData=cfg.userData_pabs);
 
   Modelica.Blocks.Tables.CombiTable2Ds COP_combi(table=COP_M) annotation(
     Placement(transformation(origin = {0, 44}, extent = {{-10, -10}, {10, 10}})));
@@ -51,27 +51,21 @@ equation
   
   LR = P_fou / P_fou_pc;
   
-  P_aux = Pabs_combi.y * Taux;
+  P_aux = Pabs_combi.y * cfg.Taux;
   P_comp_pc = Pabs_combi.y - P_aux;
-
-
-  CCP_lr_contmin_net =
-      LRcontmin * P_comp_pc * CcpLRcontmin /
-      (LRcontmin*Pabs_combi.y - CcpLRcontmin*P_aux);
-
 
   (P_comp_lr, P_abs_lr, COP_lr) = Modelitek.Hvac.HeatPumps.BaseFunctions.computePartLoad(
       LR            = LR,
-      LRcontmin     = LRcontmin,
-      COP_pc           = COP_combi.y,
+      LRcontmin     = cfg.LRcontmin,
+      COP_pc        = COP_combi.y,
       P_fou         = P_fou,
       P_fou_pc      = P_fou_pc,
       P_abs_pc      = Pabs_combi.y,
       P_comp_pc     = P_comp_pc,
       P_aux         = P_aux,
-      CcpLRcontmin  = CcpLRcontmin,
-      Deq           = Deq,
-      Dfou0         = Dfou0
+      CcpLRcontmin  = cfg.CcpLRcontmin,
+      Deq           = cfg.Deq,
+      Dfou0         = cfg.Dfou0
   );
 
   
