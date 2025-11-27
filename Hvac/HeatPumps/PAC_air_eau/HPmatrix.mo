@@ -1,7 +1,6 @@
 within Modelitek.Hvac.HeatPumps.PAC_air_eau;
 
 model HPmatrix
-  // all zeros → algorithm must fill everything
   parameter Real COP_pivot = 2.81;
   parameter Real Pabs_pivot = 1000;
   parameter Real userData_cop[5,5] = zeros(5,5);
@@ -18,12 +17,12 @@ model HPmatrix
   parameter Real Cnnam_pabs[4] = {0.86, 0.95, 1.13, 0.92};
   parameter Real t_amont_rec[5] = {-15., -7., 2., 7., 20.};
   parameter Real t_aval_rec[5] = {23.5, 32.5, 42.5, 51., 60.};
+  
   Real P_fou_pc;
   Real LR;
   Real P_comp_pc;
-  Real P_comp_lr;
-  Real P_compma_lr; //La puissance absorbée moyenne liée aux irréversibilités
   Real P_aux;
+  Real P_comp_lr;
   Real P_abs_lr;
   Real COP_lr;
   Real CCP_lr_contmin_net;
@@ -49,15 +48,32 @@ model HPmatrix
 equation
   P_fou_pc = COP_combi.y * Pabs_combi.y;
   P_fou = min(P_fou_pc, Q_req);
+  
   LR = P_fou / P_fou_pc;
+  
   P_aux = Pabs_combi.y * Taux;
   P_comp_pc = Pabs_combi.y - P_aux;
-  P_comp_lr = P_comp_pc * LR;
-  P_compma_lr = P_comp_pc * (Deq*LR*(1-LR)) / Dfou0; //WTF
-  P_abs_lr = P_comp_lr + P_compma_lr + P_aux;
-  COP_lr = P_fou / P_abs_lr;
-  CCP_lr_contmin_net = LRcontmin*P_comp_pc*CcpLRcontmin / (LRcontmin*Pabs_combi.y-CcpLRcontmin*P_aux);
-  
+
+
+  CCP_lr_contmin_net =
+      LRcontmin * P_comp_pc * CcpLRcontmin /
+      (LRcontmin*Pabs_combi.y - CcpLRcontmin*P_aux);
+
+
+  (P_comp_lr, P_abs_lr, COP_lr) = computePartLoad(
+      LR            = LR,
+      LRcontmin     = LRcontmin,
+      COP_pc           = COP_combi.y,
+      P_fou         = P_fou,
+      P_fou_pc      = P_fou_pc,
+      P_abs_pc      = Pabs_combi.y,
+      P_comp_pc     = P_comp_pc,
+      P_aux         = P_aux,
+      CcpLRcontmin  = CcpLRcontmin,
+      Deq           = Deq,
+      Dfou0         = Dfou0
+  );
+
   
   connect(t_aval, COP_combi.u1) annotation(
     Line(points = {{-120, -40}, {-64, -40}, {-64, 50}, {-12, 50}}, color = {0, 0, 127}));
