@@ -1,2 +1,3 @@
 computePartLoad
-compute55EffMatrix
+compute55COPMatrix
+compute55EERMatrix
