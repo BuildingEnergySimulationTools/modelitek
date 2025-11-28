@@ -1,3 +1,4 @@
+HPmatrix
 AffinePump
 HeatPump_COPs_Pa_Pc
 HeatPump_COPs
@@ -6,4 +7,6 @@ HeatPump_COPs_temporary
 PAC_air_eau
 Inverter
 BaseClasses
+BaseFunctions
 Examples
+HPData

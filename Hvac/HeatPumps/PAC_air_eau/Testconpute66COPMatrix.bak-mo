@@ -1,0 +1,23 @@
+within Modelitek.Hvac.HeatPumps.PAC_air_eau;
+
+model Testconpute66COPMatrix
+  // all zeros → algorithm must fill everything
+  parameter Real COP_pivot = 2.81;
+  parameter Real Pabs_pivot = 1000;
+  parameter Real userData_cop[5,5] = zeros(5,5);
+  parameter Real userData_pabs[5,5] = zeros(5,5);
+
+  parameter Real Cnnav_cop[4] = {0.8, 0.8, 1.1, 0.8};
+  parameter Real Cnnam_cop[4] = {0.5, 0.8, 1.25, 0.8};
+  parameter Real Cnnav_pabs[4] = {0.9, 0.915, 1.09, 0.91};
+  parameter Real Cnnam_pabs[4] = {0.86, 0.95, 1.13, 0.92};
+  parameter Real t_amont[5] = {-15., -7., 2., 7., 20.};
+  parameter Real t_aval[5] = {23.5, 32.5, 42.5, 51., 60.};
+
+  parameter Real COP_M[6,6] = 
+      compute55EffMatrix(Pivot=COP_pivot, Temp_aval=t_aval,Temp_amont=t_amont, Cnnav=Cnnav_cop, Cnnam=Cnnam_cop, userData=userData_cop);
+      
+  parameter Real Pabs_M[6,6] = 
+      compute55EffMatrix(Pivot=Pabs_pivot, Temp_aval=t_aval,Temp_amont=t_amont, Cnnav=Cnnav_pabs, Cnnam=Cnnam_pabs, userData=userData_pabs);
+      
+end Testconpute66COPMatrix;
