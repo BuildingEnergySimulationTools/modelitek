@@ -60,47 +60,106 @@ protected
   Real cp_bot = Medium.specificHeatCapacityCp(staBot);
 
   Real C_eff = rho * cp_top * (VTan * f_top);
+
   Boolean on(start=false, fixed=true);
   Boolean inhibit_tank_charge;
   Boolean boost_tank_charge;
   Boolean besoin_effectif;
+
+  // Température servante (été → haut, hiver → bas)
+  Real T_ctrl "Température pivot pour pilotage du ballon";
+
+  // Delta entre consigne et température pivot
+  Real dT_ctrl "Écart à la consigne selon saison";
+
+  // Puissance max possible
   Real Q_ch;
   Real Q_max;
 
 algorithm 
-  // --- Anticipation calendaire
+  // ==========================================================
+  //      Température servante (été = T_top, hiver = T_bot)
+  // ==========================================================
+  T_ctrl := if Bool_summer then T_top else T_bot;
+
+  // ==========================================================
+  //      Delta selon saison (ne sert plus à ON/OFF !)
+  // ==========================================================
+  dT_ctrl := if Bool_summer
+                then (T_top - T_set_eff)
+                else (T_set_eff - T_bot);
+
+  // ==========================================================
+  //      Anticipation calendaire
+  // ==========================================================
   inhibit_tank_charge :=
       (time > (t_summer - anticipation_summer)) and (time < t_summer);
 
   boost_tank_charge :=
       (time > (t_winter - anticipation_winter)) and (time < t_winter);
 
-  // --- Hystérésis classique selon la saison
+  // ==========================================================
+  //      HYSTERESIS robuste, (problème anti-chattering géré##)
+  // ==========================================================
+
   if Bool_summer then
-    on := if T_top > (T_set_eff + dT_hys) then true
-          else if T_top < (T_set_eff - 0.5*dT_hys) then false
-          else pre(on);
+    // === Été : pilotage sur T_top ===
+    if T_top > T_set_eff + dT_hys then
+      on := true;
+    elseif T_top < T_set_eff - dT_hys then
+      on := false;
+    else
+      on := pre(on);
+    end if;
+
   else
-    on := if T_top < (T_set_eff - dT_hys) then true
-          else if T_top > (T_set_eff + 0.5*dT_hys) then false
-          else pre(on);
+    // === Hiver : pilotage sur T_bottom ===
+    if T_bot < T_set_eff - dT_hys then
+      on := true;
+    elseif T_bot > T_set_eff + dT_hys then
+      on := false;
+    else
+      on := pre(on);
+    end if;
   end if;
 
-  // --- Logique combinée
+  // ==========================================================
+  //      Logique combinée avec anticipations
+  // ==========================================================
   besoin_effectif :=
     if inhibit_tank_charge then false
-    else if boost_tank_charge then true
+    elseif boost_tank_charge then true
     else on;
+
+  // ==========================================================
+  //      Sécurité hiver : si le bas est assez chaud → stop
+  // ==========================================================
+  if not Bool_summer then
+    if T_bot >= T_set_eff + 0.2 then
+        besoin_effectif := false;
+    end if;
+  end if;
 
 equation
   besoinON = besoin_effectif;
 
-  // --- Puissance de charge visée
-  Q_ch = C_eff / tau_charge *
-         max(0, if Bool_summer then (T_top - T_set_eff)
-                              else (T_set_eff - T_top));
+  // ==========================================================
+  //      Puissance de charge visée
+  // ==========================================================
+  Q_ch = if besoin_effectif then 
+           C_eff / tau_charge * max(0, dT_ctrl)
+         else 0;
+
+  // ==========================================================
+  //      Besoin thermique brut
+  // ==========================================================
   Q_req_th = if besoin_effectif then (Q_losses + Q_ch) else 0;
+
+  // ==========================================================
+  //      Limitation par la PAC
+  // ==========================================================
   Q_max = m_flow * cp_bot * max(0, T_HP_out_max - T_bot);
+
   Q_req = if besoin_effectif then min(Q_req_th, Q_max) else 0;
 
   annotation(
@@ -111,14 +170,18 @@ equation
         extent = {{-132, 31}, {132, -31}}, textString = "%name")}),
     Documentation(info="
 <html>
-<h3>TankPowerRequest (saisonnier + anticipation calendaire)</h3>
-<p>Intègre la gestion de l’hystérésis selon la saison et une anticipation avant le passage été/hiver basée sur les dates du calendrier.</p>
+<h3>TankPowerRequest (corrigé été/hiver + anticipations + anti-chattering)</h3>
+<p>
+Pilotage cohérent du ballon :
 <ul>
-<li><b>Anticipation été :</b> empêche la recharge dans les jours précédant <code>t_summer</code>.</li>
-<li><b>Anticipation hiver :</b> autorise une précharge dans les jours précédant <code>t_winter</code>.</li>
-<li><b>Entrée Bool_summer :</b> indique la saison active (true = été).</li>
-<li><b>besoinON :</b> combine hystérésis et anticipation calendaire.</li>
+<li><b>Été :</b> régulation sur <code>T_top</code>.</li>
+<li><b>Hiver :</b> régulation sur <code>T_bottom</code>.</li>
+<li>Hystérésis complète (pas de chattering).</li>
+<li>Anticipations saisonnières.</li>
+<li>Coupure automatique si le bas est déjà chaud.</li>
+<li>Limitation par la puissance PAC.</li>
 </ul>
+</p>
 </html>")
   );
 end TankPowerRequest_twomodes;

@@ -10,7 +10,7 @@ model MassFlowControllerHybrid "Débit = Q/(cp*ΔT) + PID sur ΔT"
 // --- Entrées ---
   Modelica.Blocks.Interfaces.RealInput Q_demand(unit="W")
     "Puissance demandée (W)"
-    annotation(Placement(transformation(extent={{-140,40},{-100,80}})));
+    annotation(Placement(transformation(extent = {{-140, 40}, {-100, 80}}), iconTransformation(extent = {{-140, 40}, {-100, 80}})));
   Modelica.Blocks.Interfaces.RealInput T_depart(unit="K")
     "Température départ (K)"
     annotation(Placement(transformation(extent={{-140,-10},{-100,30}})));
@@ -74,7 +74,6 @@ equation
     Line(points = {{-4, 54}, {40, 54}, {40, 26}, {50, 26}}, color = {0, 0, 127}));
   connect(pid.y, addFF.u2) annotation(
     Line(points={{41,-30},{48,-30},{48,14},{50,14}}, color={0,0,127}));
-
 // Limiteur et sortie
   connect(addFF.y, lim.u) annotation(
     Line(points={{70,20},{80,20}}, color={0,0,127}));
