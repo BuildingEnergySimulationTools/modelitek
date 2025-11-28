@@ -1,8 +1,8 @@
 DhwControl_cstSetpoint
 DhwControl
 TankControl
-HeatingSetpoint
 HeatpumpControl
 HeatingSetpointSimple
-HeatingSetpoint_old
+HeatingSetpoint
 CoolingSetpoint
+SetpointCurve
