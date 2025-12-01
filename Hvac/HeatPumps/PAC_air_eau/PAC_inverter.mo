@@ -50,7 +50,7 @@ model PAC_inverter
   Modelica.Blocks.Interfaces.RealInput Q_req_fr annotation(
     Placement(visible = true, transformation(origin = {-230, 124}, extent = {{-11, -11}, {11, 11}}, rotation = 0), iconTransformation(origin = {-72, 112}, extent = {{-11, -11}, {11, 11}}, rotation = -90)));
   Modelica.Blocks.Sources.RealExpression Emetteur_fr(y = Dfou0_ref) annotation(
-    Placement(visible = true, transformation(origin = {89, -23}, extent = {{-9, -7}, {9, 7}}, rotation = 0)));
+    Placement(transformation(origin = {93, -23}, extent = {{-9, -7}, {9, 7}})));
   Modelica.Blocks.Sources.BooleanExpression Lim_theta(y = Lim_Theta) annotation(
     Placement(visible = true, transformation(origin = {-38, -44}, extent = {{-10, -6}, {10, 6}}, rotation = 0)));
   Modelica.Blocks.Math.Product Pfou_pc_brut_ch_ECS annotation(
@@ -68,7 +68,7 @@ model PAC_inverter
   PAC_air_eau.Calcul_phi_rejet_ch calcul_phi_rejet_ch annotation(
     Placement(visible = true, transformation(origin = {167, -111}, extent = {{-7, -7}, {7, 7}}, rotation = 0)));
   Modelica.Blocks.Math.Product Pfou_pc_brut_ref annotation(
-    Placement(visible = true, transformation(origin = {-41, -19}, extent = {{-7, -7}, {7, 7}}, rotation = 0)));
+    Placement(transformation(origin = {-45, -21}, extent = {{-7, -7}, {7, 7}})));
   PAC_air_eau.Calcul_chauf_clim calcul_clim(CCP_LRcontmin = CCP_LRcontmin, Deq = Deq, LR_contmin = LR_contmin, Taux = Taux) annotation(
     Placement(visible = true, transformation(origin = {126, -2}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
   PAC_air_eau.LR LR_ch annotation(
@@ -282,7 +282,7 @@ equation
   connect(limit_temp_ch_ECS.Qres_ch, LR_ch.Qrest_act) annotation(
     Line(points = {{6.7, -79.38}, {15.7, -79.38}, {15.7, -90.38}, {49.7, -90.38}}, color = {0, 0, 127}));
   connect(Pfou_pc_brut_ref.y, calcul_clim.P_fou_pc_brut) annotation(
-    Line(points = {{-33, -19}, {26.7, -19}, {26.7, -6}, {115.7, -6}}, color = {0, 0, 127}));
+    Line(points = {{-37, -21}, {26.7, -21}, {26.7, -6}, {115.7, -6}}, color = {0, 0, 127}));
   connect(LR_clim.LR, calcul_clim.LR) annotation(
     Line(points = {{63.32, 6.16}, {90.32, 6.16}, {90.32, 0.66}, {115.32, 0.66}}, color = {0, 0, 127}));
   connect(limit_temp_ch_ECS.Pfou_pc, LR_ch.P_fou_PC) annotation(
@@ -290,7 +290,7 @@ equation
   connect(LR_clim.P_fou_LR, calcul_clim.P_fou_LR) annotation(
     Line(points = {{63.32, 10}, {89.32, 10}, {89.32, 6}, {115.32, 6}}, color = {0, 0, 127}));
   connect(Emetteur_fr.y, calcul_clim.Dfou0) annotation(
-    Line(points = {{98.9, -23}, {131.9, -23}, {131.9, -13}}, color = {0, 0, 127}));
+    Line(points = {{103, -23}, {134, -23}, {134, -13}, {131.9, -13}}, color = {0, 0, 127}));
   connect(greaterThreshold.y, LR_ch.I_ECS_seule) annotation(
     Line(points = {{46.7, -41}, {57.7, -41}, {57.7, -79}}, color = {255, 0, 255}));
   connect(Lim_theta.y, limit_temp_ch_ECS.Lim_Theta) annotation(
@@ -312,7 +312,7 @@ equation
   connect(Pfou_pc_brut_ch_ECS.y, limit_temp_ch_ECS.Pfou_pc_brut) annotation(
     Line(points = {{-33.3, -65}, {-27.3, -65}, {-27.3, -72}, {-8.3, -72}}, color = {0, 0, 127}));
   connect(Pfou_pc_brut_ref.y, limit_temp_refr.Pfou_pc_brut) annotation(
-    Line(points = {{-33, -19}, {-31.3, -19}, {-31.3, 10}, {-20.3, 10}}, color = {0, 0, 127}));
+    Line(points = {{-37, -21}, {-31.3, -21}, {-31.3, 10}, {-20.3, 10}}, color = {0, 0, 127}));
   connect(Q_req_ch, limit_temp_ch_ECS.Q_req_act) annotation(
     Line(points = {{-232, -130}, {-232, -96}, {-1, -96}, {-1, -85}}, color = {0, 0, 127}));
   connect(Q_req_ch, LR_ch.Q_req_act) annotation(
@@ -330,7 +330,7 @@ equation
   connect(calcul_clim.P_compma_LR, calcul_phi_rejet_clim.P_compma_LR) annotation(
     Line(points = {{137, -2}, {146, -2}, {146, 76}, {161, 76}}, color = {0, 0, 127}));
   connect(remplissage_Pabs.Pabs, Pfou_pc_brut_ref.u2) annotation(
-    Line(points = {{-97, -31.8}, {-65.5, -31.8}, {-65.5, -23}, {-49, -23}}, color = {0, 0, 127}));
+    Line(points = {{-97, -31.8}, {-65.5, -31.8}, {-65.5, -25}, {-53, -25}}, color = {0, 0, 127}));
   connect(remplissage_Pabs.Pabs, calcul_clim.P_abs_pc) annotation(
     Line(points = {{-97, -31.8}, {64, -31.8}, {64, -9.8}, {115, -9.8}}, color = {0, 0, 127}));
   connect(remplissage_Pabs.Pabs, calcul_ECS.P_abs_pc) annotation(
@@ -523,7 +523,7 @@ equation
  connect(t_aval_MODE.y, remplissage_EER.Tamont) annotation(
     Line(points = {{-154, -42}, {-130, -42}, {-130, 1}, {-108, 1}}, color = {0, 0, 127}));
  connect(remplissage_EER.EER, Pfou_pc_brut_ref.u1) annotation(
-    Line(points = {{-85, 4}, {-66, 4}, {-66, -14}, {-50, -14}}, color = {0, 0, 127}));
+    Line(points = {{-85, 4}, {-66, 4}, {-66, -17}, {-53, -17}}, color = {0, 0, 127}));
   annotation(
     Diagram(coordinateSystem(extent = {{-180, 160}, {520, -120}})),
     Icon(graphics = {Rectangle(origin = {-3, 0}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-129, -100}, {129, 100}}), Rectangle(origin = {-101, 3}, fillColor = {255, 2, 2}, fillPattern = FillPattern.Solid, extent = {{-15, 85}, {15, -85}}), Rectangle(origin = {100, 3}, fillColor = {0, 170, 255}, fillPattern = FillPattern.Solid, extent = {{-15, 85}, {15, -85}}), Line(origin = {4.18599, 70.814}, points = {{-90.186, 3.18599}, {79.814, 3.18599}, {79.814, 3.18599}}), Ellipse(origin = {3, -51}, fillColor = {255, 170, 0}, fillPattern = FillPattern.Solid, extent = {{-19, 19}, {19, -19}}), Line(origin = {-0.757248, -50.9645}, points = {{-15.2428, -1.03549}, {14.7572, -15.0355}, {14.7572, 14.9645}, {-15.2428, -1.03549}}), Line(origin = {53, -52}, points = {{-31, 0}, {31, 0}, {31, 0}}), Line(origin = {-51, -52}, points = {{35, 0}, {-35, 0}, {-35, 0}}), Polygon(origin = {-8, 74}, fillColor = {170, 170, 127}, fillPattern = FillPattern.Solid, points = {{-12, 10}, {-12, -10}, {12, 0}, {12, 0}, {-12, 10}}), Polygon(origin = {15, 74}, fillColor = {170, 170, 127}, fillPattern = FillPattern.Solid, points = {{11, 10}, {11, -10}, {-11, 0}, {11, 10}, {11, 10}})}),

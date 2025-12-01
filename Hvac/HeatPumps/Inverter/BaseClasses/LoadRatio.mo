@@ -1,11 +1,13 @@
 within Modelitek.Hvac.HeatPumps.Inverter.BaseClasses;
 
-
 model LoadRatio
   parameter Boolean Inverter = true;
   parameter Real LR_contmin = 0.2;
   parameter Real CCP_LRcontmin = 0.9;
   parameter Real Taux = 0.05;
+
+  parameter Integer mode_LR = 1 
+    "1 = loi linéaire actuelle, 2 = loi terrain multi-zones";
 
   // Entrées
   Modelica.Blocks.Interfaces.RealInput P_demande
@@ -25,25 +27,50 @@ model LoadRatio
 
 protected 
   Real COP_corr;
+  Real COP_mult;
+  Real COP_mult_lin;
 
 equation
-  // Ratio de charge protégé contre la division par zéro
+  // Ratio
   LR = if noEvent(COP_nom * Pabs_nom > 1e-6) then 
          P_demande / (COP_nom * Pabs_nom) 
        else 0;
 
-  if Inverter then
-    // Correction du COP avec limitation LR
-    COP_corr = COP_nom * (CCP_LRcontmin + (1 - CCP_LRcontmin)*
-               (max(LR, LR_contmin) - LR_contmin)/(1 - LR_contmin));
-  else
-    // Tout ou rien
+  // Loi linéaire 
+//  COP_mult_lin =
+//        CCP_LRcontmin
+//        + (1 - CCP_LRcontmin)
+//          * (max(LR, LR_contmin) - LR_contmin) / (1 - LR_contmin);
+   COP_mult_lin=(1+(CCP_LRcontmin-1)*((1-LR)/(1-LR_contmin)));
+
+
+  // Loi terrain
+  COP_mult =
+        if LR < 0.2 then 0.35
+        elseif LR < 0.4 then 0.65 + (LR - 0.2)/0.2 * (0.85 - 0.65)
+        elseif LR < 0.99 then 1.0
+        else 0.7;
+
+  // ===== Sélection loi de correction COP =====
+  if not Inverter then
     COP_corr = COP_nom;
+
+  else
+    if mode_LR == 1 then
+      // --- Loi linéaire standard ---
+      COP_corr = COP_nom * COP_mult_lin;
+
+    else
+      // --- Loi terrain multi-zones ---
+      COP_corr = COP_nom * COP_mult;
+
+    end if;
   end if;
 
-  // Puissance utile et absorbée corrigées
+  // Sorties corrigées
   P_utile = COP_corr * Pabs_nom * LR;
-  P_abs   = Pabs_nom * LR + Taux * Pabs_nom*(1 - LR);
+  P_abs   = Pabs_nom * LR + Taux * Pabs_nom * (1 - LR);
+
 
 annotation(
     Diagram(coordinateSystem(extent = {{-120, 80}, {0, -20}}), graphics),
