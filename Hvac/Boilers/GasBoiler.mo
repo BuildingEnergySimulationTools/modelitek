@@ -116,6 +116,51 @@ algorithm
   
   P_in := P_gas + W_aux;
 
-annotation(
-    Icon(graphics = {Rectangle(fillColor = {255, 172, 178}, fillPattern = FillPattern.Solid, extent = {{100, -100}, {-100, 100}})}));
+    annotation (Icon, Documentation(info = "<html><head></head><body><h4>GasBoiler model</h4>
+<p>
+This model represents a natural-gas boiler using a simplified performance-based approach derived from manufacturer data and empirical correlations. 
+It computes the delivered heat output, thermal losses, gas consumption (PCI basis), auxiliary electricity use, and boiler efficiency under varying operating conditions.
+</p>
+
+<h4>Main functionalities</h4>
+<ul>
+  <li>Limits the boiler thermal output by the nominal corrected thermal power.</li>
+  <li>Computes thermal losses as a function of corrected nominal and intermediate efficiencies.</li>
+  <li>Includes standby losses through a stabilization term based on the temperature difference between outdoor air and boiler output.</li>
+  <li>Determines auxiliary electrical power depending on boiler load (nominal, intermediate, or standby).</li>
+  <li>Calculates gas input power (PCI) and total input power (gas + auxiliaries).</li>
+</ul>
+
+<h4>Inputs</h4>
+<ul>
+  <li><code>Q_req</code>: Requested heating power (W)</li>
+  <li><code>T_out</code>: Boiler outlet temperature (°C)</li>
+  <li><code>T_amb</code>: Ambient temperature (°C)</li>
+</ul>
+
+<h4>Outputs</h4>
+<ul>
+  <li><code>Q_out</code>: Delivered thermal power (W)</li>
+  <li><code>Q_losses</code>: Total boiler thermal losses (W)</li>
+  <li><code>Q_rec</code>: Recoverable part of heat losses (W)</li>
+  <li><code>eta</code>: Instantaneous efficiency (-)</li>
+  <li><code>W_aux</code>: Auxiliary electrical consumption (W)</li>
+  <li><code>P_gas</code>: Gas input power (PCI basis, W)</li>
+  <li><code>P_in</code>: Total input power (gas + auxiliary, W)</li>
+  <li><code>charge</code>: Boiler load ratio (-)</li>
+</ul>
+
+<h4>Configuration</h4>
+<p>
+The model relies on a <code>BoilerData</code> structure containing coefficients, nominal and intermediate powers, thermal correction parameters, and standby electric consumption.
+The correlations follow the reference performance equations implemented internally (coefficients <code>c1</code> to <code>c10</code>, <code>n</code>, <code>p_rec</code>, etc.).
+</p>
+
+<h4>Important Notes</h4>
+<ul>
+  <li><b>This model does not account for domestic hot water (DHW) production.</b> It only represents space heating performance.</li>
+  <li>Gas consumption is expressed on a Lower Heating Value (LHV / PCI) basis.</li>
+  <li>A correction factor <code>PCSI</code> adjusts for different fuels (natural gas, GPL, FOD).</li></ul>
+</body></html>"));
+
 end GasBoiler;
