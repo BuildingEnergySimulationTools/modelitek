@@ -42,6 +42,7 @@ protected
   Real Q_loss_int;
 
   Real Q_stab;
+  Real DT;
 
   Real W_aux_nom;
   Real W_aux_int;
@@ -71,7 +72,8 @@ algorithm
                  (cfg.therm.T_ref_int - T_out)), 0.990);
 
   // 1021 — en W
-  Q_stab := Q_po_30 * ((T_out - T_amb) / 30)^1.25;
+  DT := max(T_out - T_amb, 0); // for numerical stabilisation
+  Q_stab := Q_po_30 * (DT / 30)^1.25;
   if Q_stab < 0 then Q_stab := 0; end if;
 
   // P_nom et P_int sont en kW → convertir en W ici
