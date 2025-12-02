@@ -1,6 +1,6 @@
 within Modelitek.Hvac.HeatPumps.Examples;
 
-model HPmatrixExample
+model CascadeHPmatrixExample
   extends Modelica.Icons.Example;
   
   parameter Real COP_pivot = 3.;
@@ -9,12 +9,8 @@ model HPmatrixExample
   parameter Real EER_pivot = 3.;
   parameter Modelica.Units.SI.Power Pabs_pivot_eer = 33333;
   
-  parameter Modelica.Units.SI.Power Qreq = 115000;
+  parameter Modelica.Units.SI.Power Qreq = 115000*4;
   parameter Modelica.Units.SI.Time slope_duration = 100000;
-  
-  
-  HPmatrix hPmatrix(cfg = HPData.AirWater_AquaSnap40P())  annotation(
-    Placement(transformation(origin = {4, -4}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.RealExpression tamont(y = -7)  annotation(
     Placement(transformation(origin = {-72, -10}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.RealExpression taval(y = 42.5) annotation(
@@ -23,18 +19,19 @@ model HPmatrixExample
     Placement(transformation(origin = {-72, -62}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.BooleanExpression Heat_cool(y = true)  annotation(
     Placement(transformation(origin = {-72, -26}, extent = {{-10, -10}, {10, 10}})));
+  CascadeHP cascadeHP(n_hp = 3, cfg=Modelitek.Hvac.HeatPumps.HPData.AirWater_AquaSnap140P())  annotation(
+    Placement(transformation(origin = {6, -6}, extent = {{-10, -10}, {10, 10}})));
 equation
-  connect(taval.y, hPmatrix.t_aval) annotation(
-    Line(points = {{-60, 6}, {-20, 6}, {-20, 4}, {-6, 4}}, color = {0, 0, 127}));
-  connect(tamont.y, hPmatrix.t_amont) annotation(
-    Line(points = {{-61, -10}, {-58, -10}, {-58, 0}, {-6, 0}}, color = {0, 0, 127}));
-  connect(ramp.y, hPmatrix.Q_req) annotation(
-    Line(points = {{-61, -62}, {-32, -62}, {-32, -12}, {-6, -12}}, color = {0, 0, 127}));
-  connect(Heat_cool.y, hPmatrix.Heating) annotation(
-    Line(points = {{-60, -26}, {-50, -26}, {-50, -6}, {-6, -6}}, color = {255, 0, 255}));
-
-annotation(
+  connect(ramp.y, cascadeHP.Q_req) annotation(
+    Line(points = {{-60, -62}, {-40, -62}, {-40, 2}, {-6, 2}}, color = {0, 0, 127}));
+  connect(tamont.y, cascadeHP.T_amont) annotation(
+    Line(points = {{-60, -10}, {-28, -10}, {-28, -2}, {-6, -2}, {-6, -4}}, color = {0, 0, 127}));
+  connect(taval.y, cascadeHP.T_aval) annotation(
+    Line(points = {{-60, 6}, {-34, 6}, {-34, -10}, {-4, -10}}, color = {0, 0, 127}));
+  connect(Heat_cool.y, cascadeHP.heating) annotation(
+    Line(points = {{-60, -26}, {-24, -26}, {-24, -8}, {-6, -8}}, color = {255, 0, 255}));
+  annotation(
     experiment(StartTime = 0, StopTime = 100000, Tolerance = 1e-06, Interval = 200),
     __OpenModelica_commandLineOptions = "--matchingAlgorithm=PFPlusExt --indexReductionMethod=dynamicStateSelection -d=initialization,NLSanalyticJacobian",
     __OpenModelica_simulationFlags(lv = "LOG_STDOUT,LOG_ASSERT,LOG_STATS", s = "dassl", variableFilter = ".*"));
-end HPmatrixExample;
+end CascadeHPmatrixExample;

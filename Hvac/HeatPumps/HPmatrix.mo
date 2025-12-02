@@ -17,8 +17,6 @@ model HPmatrix
   Real P_abs_lr;
   Real P_comp_lr;
   
-  
-  
   parameter Real COP_M[6,6] = 
       Modelitek.Hvac.HeatPumps.BaseFunctions.compute55COPMatrix(
       Pivot=cfg.COP_pivot, 
