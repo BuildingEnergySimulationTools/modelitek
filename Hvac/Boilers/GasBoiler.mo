@@ -19,104 +19,100 @@ model GasBoiler
     iconTransformation(origin = {120, 18}, extent = {{-20, -20}, {20, 20}})));
   Modelica.Blocks.Interfaces.RealOutput Q_losses "W";
   Modelica.Blocks.Interfaces.RealOutput Q_rec "W";
-  Modelica.Blocks.Interfaces.RealOutput eta;
   Modelica.Blocks.Interfaces.RealOutput W_aux "W";
-  Modelica.Blocks.Interfaces.RealOutput P_th_nom_ch "W";
-  Modelica.Blocks.Interfaces.RealOutput charge "-";
-  
   Modelica.Blocks.Interfaces.RealOutput P_gas "W (PCI)";
   Modelica.Blocks.Interfaces.RealOutput P_in  "W (Total input power)";
 
   parameter Real PCSI = 1.11 "natural gaz, (GPL:1.09, FOD: 1.07)";
 
-protected
   Real R_nom_ref;
   Real R_int_ref;
-  Real Q_po_30;
-  Real P_th_int_ch;
   
   Real R_nom_corr;
   Real R_int_corr;
 
+  Real Q_po_30;
+  
+  Real eta;
+  Real charge;
+
+  Real P_th_nom_ch;
+  Real P_th_int_ch;
+
   Real Q_loss_nom;
   Real Q_loss_int;
-
   Real Q_stab;
-  Real DT;
 
   Real W_aux_nom;
   Real W_aux_int;
   Real W_veille;
+  
+  protected
+  
+  Real DT;
 
-
-algorithm
+equation
   // kW → W pour P_nom et P_int
   // 1013 / 1014
-  R_nom_ref := (cfg.coeffs.c1 + cfg.coeffs.c2*log(cfg.P_nom)) / 100 / PCSI;
-  R_int_ref := (cfg.coeffs.c3 - cfg.coeffs.c4*log(cfg.P_nom)) / 100 / PCSI; //erreur dans RE ?
-//  R_int_ref := (cfg.coeffs.c3 - cfg.coeffs.c4*log(cfg.P_int)) / 100 / PCSI;
+  R_nom_ref = (cfg.coeffs.c1 + cfg.coeffs.c2*log(cfg.P_nom)) / 100 / PCSI;
+  R_int_ref = (cfg.coeffs.c3 - cfg.coeffs.c4*log(cfg.P_nom)) / 100 / PCSI; //erreur dans RE ?
+  //  R_int_ref := (cfg.coeffs.c3 - cfg.coeffs.c4*log(cfg.P_int)) / 100 / PCSI;
 
   // 1015  — Q_po_30 doit être en W
-  Q_po_30 := 1000 * cfg.coeffs.c5 * (cfg.P_nom^cfg.coeffs.c6) * cfg.P_nom;
+  Q_po_30 = 1000 * cfg.coeffs.c5 * (cfg.P_nom^cfg.coeffs.c6) * cfg.P_nom;
 
   // 1016 – 1018 (déjà en W)
-  W_aux_nom := cfg.coeffs.c7 + cfg.coeffs.c8*(cfg.P_nom^cfg.coeffs.n);
-  W_aux_int := cfg.coeffs.c9 + cfg.coeffs.c10*(cfg.P_int^cfg.coeffs.n);
-  W_veille := cfg.W_veille_default;
+  W_aux_nom = cfg.coeffs.c7 + cfg.coeffs.c8*(cfg.P_nom^cfg.coeffs.n);
+  W_aux_int = cfg.coeffs.c9 + cfg.coeffs.c10*(cfg.P_int^cfg.coeffs.n);
+  W_veille = cfg.W_veille_default;
 
   // 1019–1020 //%
-  R_nom_corr := min((R_nom_ref + cfg.therm.alpha_nom *
-                 (cfg.therm.T_ref_nom - T_out)), 0.990);
-  
-  R_int_corr := min((R_int_ref + cfg.therm.alpha_int *
-                 (cfg.therm.T_ref_int - T_out)), 0.990);
+  R_nom_corr = min((R_nom_ref + cfg.therm.alpha_nom *
+                 (cfg.therm.T_ref_nom - T_out)), 10); // limitation à 1000%.
+
+  R_int_corr = min((R_int_ref + cfg.therm.alpha_int *
+                 (cfg.therm.T_ref_int - T_out)), 10);
 
   // 1021 — en W
-  DT := max(T_out - T_amb, 0); // for numerical stabilisation
-  Q_stab := Q_po_30 * (DT / 30)^1.25;
-  if Q_stab < 0 then Q_stab := 0; end if;
+  DT = max(T_out - T_amb, 0); // for numerical stabilisation
+  Q_stab = max(Q_po_30 * (DT / 30)^1.25,0);
 
-  // P_nom et P_int sont en kW → convertir en W ici
   // 1041
-  P_th_nom_ch := (cfg.P_nom * 1000) * R_nom_corr / R_nom_ref;
+  P_th_nom_ch = (cfg.P_nom * 1000) * R_nom_corr / R_nom_ref;
 
   // 1040
-  Q_out := min(Q_req, P_th_nom_ch);
+  Q_out = min(Q_req, P_th_nom_ch);
 
   if P_th_nom_ch > 0 then
-    charge := Q_out / P_th_nom_ch;
+    charge = max(0, min(1, (Q_out / P_th_nom_ch)));
   else
-    charge := 0;
+    charge = 0;
   end if;
 
   // 1027 / 1029 — tout en W
-  P_th_int_ch := 1000 * (R_int_corr / R_int_ref) * cfg.P_int;
-  Q_loss_int := (1/R_int_corr - 1) * P_th_int_ch;
-  Q_loss_nom := (1/R_nom_corr - 1) * P_th_nom_ch;
+  P_th_int_ch = 1000 * (R_int_corr / R_int_ref) * cfg.P_int;
+  Q_loss_int = (1/R_int_corr - 1) * P_th_int_ch;
+  Q_loss_nom = (1/R_nom_corr - 1) * P_th_nom_ch;
 
-  Q_losses := Q_loss_int + (Q_loss_nom - Q_loss_int)*charge + Q_stab;
-  Q_rec := cfg.p_rec * Q_losses;
+  Q_losses = Q_loss_int + (Q_loss_nom - Q_loss_int)*charge + Q_stab;
+  Q_rec = cfg.p_rec * Q_losses;
 
-  eta := if Q_out + Q_losses > 0 then Q_out / (Q_out + Q_losses) else 0;
+  eta = max(0, min(1, if Q_out + Q_losses > 0 then Q_out / (Q_out + Q_losses) else 0));
   
-  // === Consommation gaz (PCI) ===
-  if Q_out + Q_losses > 0 then
-    P_gas := Q_out + Q_losses;   // PCI
-  else
-    P_gas := 0;
-  end if;
-  
+  P_gas = if Q_out + Q_losses > 0 then Q_out + Q_losses else 0;
   if charge <= 0 then
-    W_aux := W_veille;
+    W_aux = W_veille;
   elseif charge <= 0.3 then
-    W_aux := W_aux_int;
+    W_aux = W_aux_int;
   else
-    W_aux := W_aux_nom;
+    W_aux = W_aux_nom;
   end if;
-  
-  P_in := P_gas + W_aux;
 
-    annotation (Icon, Documentation(info = "<html><head></head><body><h4>GasBoiler model</h4>
+  P_in = P_gas + W_aux;
+
+annotation(
+  Icon,
+  Documentation(info="<html><head></head><body><h4>GasBoiler model</h4>
 <p>
 This model represents a natural-gas boiler using a simplified performance-based approach derived from manufacturer data and empirical correlations. 
 It computes the delivered heat output, thermal losses, gas consumption (PCI basis), auxiliary electricity use, and boiler efficiency under varying operating conditions.
