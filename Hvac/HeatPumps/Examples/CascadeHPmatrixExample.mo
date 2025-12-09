@@ -19,7 +19,7 @@ model CascadeHPmatrixExample
     Placement(transformation(origin = {-72, -62}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Sources.BooleanExpression Heat_cool(y = true)  annotation(
     Placement(transformation(origin = {-72, -26}, extent = {{-10, -10}, {10, 10}})));
-  CascadeHP cascadeHP(n_hp = 3, cfg=Modelitek.Hvac.HeatPumps.HPData.AirWater_AquaSnap140P())  annotation(
+  CascadeHP cascadeHP(n_hp = 3, cfg=Modelitek.Hvac.HeatPumps.HPData.AirWater_AquaSnap140P(), tau = 600)  annotation(
     Placement(transformation(origin = {6, -6}, extent = {{-10, -10}, {10, 10}})));
 equation
   connect(ramp.y, cascadeHP.Q_req) annotation(
@@ -33,5 +33,6 @@ equation
   annotation(
     experiment(StartTime = 0, StopTime = 100000, Tolerance = 1e-06, Interval = 200),
     __OpenModelica_commandLineOptions = "--matchingAlgorithm=PFPlusExt --indexReductionMethod=dynamicStateSelection -d=initialization,NLSanalyticJacobian",
-    __OpenModelica_simulationFlags(lv = "LOG_STDOUT,LOG_ASSERT,LOG_STATS", s = "dassl", variableFilter = ".*"));
+    __OpenModelica_simulationFlags(lv = "LOG_STDOUT,LOG_ASSERT,LOG_STATS", s = "dassl", variableFilter = ".*"),
+  Diagram(coordinateSystem(extent = {{-100, 20}, {20, -80}})));
 end CascadeHPmatrixExample;
