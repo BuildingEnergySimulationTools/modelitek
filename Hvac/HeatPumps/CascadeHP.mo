@@ -39,7 +39,8 @@ model CascadeHP
   discrete Integer n_prev(start=0);
   discrete Integer n_active_int(start=0);
   discrete Real t_change(start=0);
-
+  Modelica.Blocks.Interfaces.RealOutput COP annotation(
+    Placement(transformation(origin = {110, 68}, extent = {{-10, -10}, {10, 10}}), iconTransformation(origin = {110, 88}, extent = {{-10, -10}, {10, 10}})));
 equation
 
   for i in 1:n_hp loop
@@ -76,5 +77,6 @@ equation
   end when;
 
   n_active = n_active_int;
+  COP = COP_cascade;  
 
 end CascadeHP;

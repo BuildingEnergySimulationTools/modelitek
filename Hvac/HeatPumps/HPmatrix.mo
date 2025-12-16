@@ -71,6 +71,8 @@ model HPmatrix
     Placement(transformation(origin = {0, -70}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Interfaces.BooleanInput Heating annotation(
     Placement(transformation(origin = {-120, -60}, extent = {{-20, -20}, {20, 20}}), iconTransformation(origin = {-110, -22}, extent = {{-20, -20}, {20, 20}})));
+  Modelica.Blocks.Interfaces.RealOutput COP annotation(
+    Placement(transformation(origin = {110, 50}, extent = {{-10, -10}, {10, 10}}), iconTransformation(origin = {110, 50}, extent = {{-10, -10}, {10, 10}})));
 equation
 
   if Heating == true
@@ -104,6 +106,8 @@ equation
       Deq           = cfg.Deq,
       Dfou0         = cfg.Dfou0
   );
+  
+  COP = COP_lr;
   
   connect(t_aval, COP_combi.u1);
   connect(t_aval, Pabs_cop_combi.u1);
