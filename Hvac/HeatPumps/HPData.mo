@@ -6,25 +6,25 @@ extends Modelica.Icons.RecordsPackage;
 record BaseHPData
     extends Modelica.Icons.Record;
     parameter Real COP_pivot;
-    parameter Real Pabs_pivot_cop;
+    parameter Modelica.Units.SI.Power Pabs_pivot_cop;
     parameter Real userData_cop[5, 5]; // zeros = missing
     parameter Real userData_pabs_cop[5, 5]; // zeros = missing
     parameter Real Cnnav_cop[4];
     parameter Real Cnnam_cop[4];
     parameter Real Cnnav_pabs_cop[4];
     parameter Real Cnnam_pabs_cop[4];
-    parameter Real t_amont_rec_cop[5];
-    parameter Real t_aval_rec_cop[5];
+    parameter Modelica.Units.SI.Temperature t_amont_rec_cop[5];
+    parameter Modelica.Units.SI.Temperature t_aval_rec_cop[5];
     parameter Real eer_pivot;
-    parameter Real Pabs_pivot_eer;
+    parameter Modelica.Units.SI.Power Pabs_pivot_eer;
     parameter Real userData_eer[5, 5];
-    parameter Real userData_pabs_eer[5, 5];
+    parameter Modelica.Units.SI.Power userData_pabs_eer[5, 5];
     parameter Real Cnnav_eer[4];
     parameter Real Cnnam_eer[4];
     parameter Real Cnnav_pabs_eer[4];
     parameter Real Cnnam_pabs_eer[4];
-    parameter Real t_amont_rec_eer[5];
-    parameter Real t_aval_rec_eer[5];
+    parameter Modelica.Units.SI.Temperature t_amont_rec_eer[5];
+    parameter Modelica.Units.SI.Temperature t_aval_rec_eer[5];
     parameter Real Taux;
     parameter Real Deq; // Convention says it must be 0.5 min
     parameter Real Dfou0;
